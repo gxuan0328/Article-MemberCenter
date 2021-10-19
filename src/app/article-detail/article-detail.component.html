@@ -1,0 +1,20 @@
+
+<div *ngIf="article">
+    <div class="header" >
+        <h1>{{article.title | uppercase}}</h1>
+        <h3>{{article.author | uppercase}}</h3>
+    </div>
+    <div class="content">
+        <p>{{article.content}}</p>
+    </div>
+
+    
+    <!-- <textarea #textbox  (change)="article.content=textbox.value">{{article.content}}</textarea> -->
+    <div class="footer">
+        <button (click)="goBack()">back</button>
+        <button routerLink="/detail/{{article.id}}/edit">edit</button>
+    </div>
+    
+</div>
+
+

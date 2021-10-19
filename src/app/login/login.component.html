@@ -1,0 +1,26 @@
+<div class="container">
+    <mat-card fxFlex class="login-card">
+      <mat-card-title class="title">登入</mat-card-title>
+      <form [formGroup]="form" (ngSubmit)="login()" novalidate>            
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput placeholder="使用者名稱" formControlName="username" >
+          </mat-form-field>
+          
+          <mat-form-field>
+            <input matInput type="password" placeholder="密碼" formControlName="password" >     
+          </mat-form-field>
+          
+          <div>
+            <mat-checkbox formControlName="rememberMe" class="chk">記得我</mat-checkbox>
+          </div>
+        </mat-card-content>
+        <mat-card-actions class="btn-center">
+          <button mat-raised-button type="submit" [disabled]="!form.valid" >登入</button>
+          <button mat-raised-button type="cancel">取消</button>                      
+        </mat-card-actions>
+      </form>                  
+    </mat-card>
+  </div>
+
+

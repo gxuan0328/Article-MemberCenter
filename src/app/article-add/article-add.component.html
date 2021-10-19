@@ -1,0 +1,21 @@
+<div>
+    <div class="header" >
+        <h1>[ CREATE MODE ]</h1>
+    </div>
+    <div class="detail">
+        <textarea class="title" #title type="text" placeholder="Article Title"></textarea>
+        <input class="author" #author type="text" placeholder="Author">
+    </div>
+    <div class="content">
+        <textarea class="textbox" #textbox  placeholder="Context..."></textarea>
+    </div>
+    
+    
+    <div class="footer">
+        <button (click)="goBack()">back</button>
+        <button (click)="add(title.value,author.value,textbox.value)">add</button>
+
+    </div>
+    
+</div>
+

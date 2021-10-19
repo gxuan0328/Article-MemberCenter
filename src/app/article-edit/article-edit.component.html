@@ -1,0 +1,20 @@
+<div *ngIf="article">
+    <div class="header" >
+        <h1>[ EDIT MODE ]</h1>
+    </div>
+    <div class="detail">
+        <textarea class="title" #title type="text" value={{article.title}} (change)="article.title=title.value" placeholder="Article Title"></textarea>
+        <input class="author" #author type="text" value={{article.author}} (change)="article.author=author.value" placeholder="Author">
+    </div>
+    <div class="content">
+        <textarea class="textbox" #textbox  (change)="article.content=textbox.value" placeholder="Context...">{{article.content}}</textarea>
+    </div>
+    
+    
+    <div class="footer">
+        <button (click)="goBack()">back</button>
+        <button (click)="delete()">delete</button>
+        <button (click)="save()">update</button>
+    </div>
+    
+</div>

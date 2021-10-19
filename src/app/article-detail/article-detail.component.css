@@ -1,0 +1,44 @@
+h1 {
+    margin: 0px;
+    padding-top: 22px;
+}
+h3 {
+    margin-top: 10px;
+}
+.header {
+    width: 640px;
+    margin: 0 auto;
+    text-align: center;
+}
+.content {
+    text-align:center;
+}
+p {
+    width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border-width:1px;
+    border-style:solid;
+    line-height: 1.5;
+    text-align: left;
+    white-space: pre-wrap;
+    font-size: 14px;
+}
+.footer  {
+    text-align: center;
+}
+button {
+    background-color: #E0E0E0;
+    margin: 20px;
+    border-radius: 4px;
+    border-style: hidden;
+    width: 60px;
+    height:25px;
+}
+button:hover {
+    background-color: #D0D0D0;
+}
+button:active {
+    background-color: #525252;
+    color: #fafafa;
+}
