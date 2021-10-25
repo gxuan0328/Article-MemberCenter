@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Article } from '../article';
+import { ArticleService } from '../article.service';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
@@ -7,26 +10,38 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 })
 export class LoginComponent implements OnInit {
 
-    public form!: FormGroup;
-    constructor(
-        private fb: FormBuilder
+
+
+    form: FormGroup = new FormGroup({
+        UserName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+        Password: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+    });
+
+    constructor( 
+        private articleService: ArticleService,
+        private router: Router,
     ) { }
 
     ngOnInit() {
-        this.form = this.fb.group({
-            username: ['', Validators.pattern('^[a-zA-Z0-9-_]{5,20}')],
-            password: ['', Validators.pattern('^[a-zA-Z0-9-_]{5,20}')],
-            rememberMe: [false]
-        });
-    }
 
-    get username() { return this.form.get('username'); }
-    get password() { return this.form.get('password'); }
-    get rememberMe() { return this.form.get('rememberMe'); }
+     }
 
-    login() {
-      console.log('account ', this.username?.value);
-      console.log('password ', this.password?.value);
-      
-    }
+    Login(): void {
+        console.log('A',this.form.get('UserName')?.value);
+        console.log('B',this.form.get('Password')?.value);
+        this.articleService.getUser(this.form.get('UserName')?.value,this.form.get('Password')?.value).
+            subscribe( (user) => {
+                console.log(user.StatusCode);
+                if(user.StatusCode == 200){
+                    alert('GOOD');
+                    console.log(user.Data);
+                    this.articleService.Login(user.Data);
+                    this.router.navigate(['articles']);
+                }
+                else{
+                    alert('incorrect username or password');
+                    console.log(user.Data);
+                }
+            });
+     }
 }

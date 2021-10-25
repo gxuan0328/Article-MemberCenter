@@ -10,6 +10,9 @@ import { Article } from '../article';
   styleUrls: ['./article-add.component.css']
 })
 export class ArticleAddComponent implements OnInit {
+  flag: boolean =false;
+  userID: number = 0;
+  userName: string = 'Guset';
 
 
   constructor(
@@ -18,6 +21,7 @@ export class ArticleAddComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
+    this.getUserStatus();
   }
 
   public goBack(): void {
@@ -37,6 +41,14 @@ export class ArticleAddComponent implements OnInit {
         console.log(article);
         this.location.back();
       });
+  }
+
+  private getUserStatus(): void {
+    let status = this.articleService.userStatus();
+    console.log(status);
+    this.flag = status.flag;
+    this.userID = status.userID;
+    this.userName = status.userName;
   }
 
 

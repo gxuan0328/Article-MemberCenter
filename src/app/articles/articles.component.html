@@ -1,12 +1,20 @@
-
 <h1>Article List</h1>
 
-<div class="container">
+<div class="container"> 
+    <div *ngIf="!flag else logout" class="member">
+        <button  class="login" routerLink="/login">LOGIN</button>
+    </div>
+    <ng-template #logout>
+        <div class="member">
+            <div class="hello">Welcome, {{userName}}</div>
+            <button class="login" (click)="Logout()">LOGOUT</button>
+        </div>
+    </ng-template>
     <div class="box">
         <h2>NEWS</h2>
         <app-article-search></app-article-search>
-        <button class="login" routerLink="/login">LOGIN</button>
-        <button routerLink="/articles/add">+</button>        
+        
+        <button routerLink="/articles/add" [disabled]="!flag">+</button>        
     </div>
     <div class="tab-list">
         <mat-tab-group animationDuration="0ms">

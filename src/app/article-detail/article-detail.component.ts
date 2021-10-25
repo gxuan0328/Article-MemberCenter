@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ArticleService } from '../article.service';
 import { Article } from '../article';
@@ -10,6 +10,11 @@ import { Article } from '../article';
   styleUrls: ['./article-detail.component.css']
 })
 export class ArticleDetailComponent implements OnInit {
+
+  flag: boolean =false;
+  userID: number = 0;
+  userName: string = 'Guset';
+  
 
   @Input() _article: Article = {
     id: 0,
@@ -30,7 +35,21 @@ export class ArticleDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private articleService: ArticleService,
     private location: Location,
+    private router: Router,
   ) { }
+
+  public ngOnInit(): void {
+    this.getArticle();
+    this.getUserStatus();
+  }
+
+  private getUserStatus(): void {
+    let status = this.articleService.userStatus();
+    console.log(status);
+    this.flag = status.flag;
+    this.userID = status.userID;
+    this.userName = status.userName;
+  }
 
   private getArticle(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -39,11 +58,18 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   public goBack(): void {
+
     this.location.back();
   }
 
-  public ngOnInit(): void {
-    this.getArticle();
+  public delete(): void {
+    if (confirm('Are you sure to delete this record?')) {
+      const id = Number(this.route.snapshot.paramMap.get('id'));
+      this.articleService.deleteArticle(id)
+        .subscribe(() => this.router.navigate(['articles']));
+    }
   }
+
+
 
 }

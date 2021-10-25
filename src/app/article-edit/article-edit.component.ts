@@ -10,6 +10,11 @@ import { Article } from '../article';
   styleUrls: ['./article-edit.component.css']
 })
 export class ArticleEditComponent implements OnInit {
+
+  flag: boolean =false;
+  userID: number = 0;
+  userName: string = 'Guset';
+
   private _article: Article = {
     id: 0,
     title: '',
@@ -28,9 +33,13 @@ export class ArticleEditComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private articleService: ArticleService,
-    private location: Location,
-    private router: Router,
+    private location: Location
   ) { }
+
+  public ngOnInit(): void {
+    this.getArticle();
+    this.getUserStatus();
+  }
 
   private getArticle(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -49,18 +58,14 @@ export class ArticleEditComponent implements OnInit {
     }
   }
 
-  public delete(): void {
-    if (confirm('Are you sure to delete this record?')) {
-      const id = Number(this.route.snapshot.paramMap.get('id'));
-      this.articleService.deleteArticle(id)
-        .subscribe(() => this.router.navigate(['articles']));
-    }
-
-
+  private getUserStatus(): void {
+    let status = this.articleService.userStatus();
+    console.log(status);
+    this.flag = status.flag;
+    this.userID = status.userID;
+    this.userName = status.userName;
   }
 
-  public ngOnInit(): void {
-    this.getArticle();
-  }
+
 
 }

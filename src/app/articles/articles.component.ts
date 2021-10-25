@@ -8,7 +8,11 @@ import { ArticleService } from '../article.service';
   styleUrls: ['./articles.component.css']
 })
 export class ArticlesComponent implements OnInit {
-  data: [] = [];
+  flag: boolean =false;
+  userID: number = 0;
+  userName: string = 'Guset';
+
+  // data: [] = [];
 
   private _articles: Article[] = [];
   p: number = 0;
@@ -41,7 +45,14 @@ export class ArticlesComponent implements OnInit {
     this.n = 1;
   }
 
-
+  public ngOnInit(): void {
+    this.getArticles();
+    this.getUserStatus();
+    console.log('user status: ',this.articleService.userStatus());
+    // this.getTest();
+    // this.getDataFromAPI();
+    // this.getUser();
+  }
 
 
   private getArticles(): void {
@@ -52,21 +63,23 @@ export class ArticlesComponent implements OnInit {
       });
   }
 
-  // private getTest(): void {
-  //   this.articleService.getTest()
-  //     .subscribe(test => { 
-  //       this.test = test, 
-  //       console.log(test); 
-  //     });
-  // }
-
-
-  public ngOnInit(): void {
-    this.getArticles();
-    // this.getTest();
-    // this.getDataFromAPI();
-    // this.getUser();
+  private getUserStatus(): void {
+    let status = this.articleService.userStatus();
+    console.log(status);
+    this.flag = status.flag;
+    this.userID = status.userID;
+    this.userName = status.userName;
   }
+
+  public Logout(): void {
+    this.articleService.Logout();
+    this.getUserStatus();
+  }
+
+
+
+
+
 
   // getDataFromAPI() {
   //   this.articleService.getData().subscribe(

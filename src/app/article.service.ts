@@ -10,26 +10,38 @@ import { User } from './user';
 })
 export class ArticleService {
 
+  
   private articlesUrl = 'api';
-  private testUrl = 'api/test';
-  private userUrl = 'api/user';
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
+  
+
+  flag: boolean =false;
+  userID: number = 0;
+  userName: string = 'Guset';
 
   constructor(private http: HttpClient) { }
 
-  // getData() {
-  //   return this.http.get('/api/getData');
-  // }
+  public Login(user: User): void {
+    this.flag = true;
+    this.userID = user.UserID;
+    this.userName = user.UserName;
+  }
 
-  // getUser(): Observable<User> {
-  //   return this.http.get<User>(this.userUrl)
-  //     .pipe(
-  //       tap(_ => console.log('fetch user')),
-  //       catchError(this.handleError<User>('getUser', { name: '', password: '' }))
-  //     );
-  // }
+  public Logout(): void {
+    this.flag = false;
+    this.userID = 0;
+    this.userName = 'Guset';
+  }
+
+  public userStatus() {
+    return {
+      flag: this.flag,
+      userID: this.userID,
+      userName:this.userName,
+    };
+  }
 
   public getArticles(): Observable<Response<Article[]>> {
     return this.http.get<Response<Article[]>>(this.articlesUrl)
@@ -40,7 +52,7 @@ export class ArticleService {
   }
 
   public getArticle(id: number): Observable<Response<Article>> {
-    const url = `${this.articlesUrl}/${id}`;
+    const url = `${this.articlesUrl}/detail/${id}`;
     return this.http.get<Response<Article>>(url).pipe(
       tap(_ => console.log('fetch article')),
       catchError(this.handleError<Response<Article>>(`getArticle id=${id}`))
@@ -77,6 +89,13 @@ export class ArticleService {
     return this.http.get<Article[]>(`${this.articlesUrl}/search/${term}`).pipe(
       tap(x => x.length ? console.log(`found articles matching "${term}"`) : console.log(`no articles matching "${term}"`)),
       catchError(this.handleError<Article[]>('searchArticle'))
+    );
+  }
+
+  public getUser(name: string, password: string): Observable<Response<User>> {
+    return this.http.get<Response<User>>(`${this.articlesUrl}/getUser`,{params:{UserName:name, Password:password}}).pipe(
+      tap(_ => console.log('fetch user')),
+      catchError(this.handleError<Response<User>>(`getUser name=${name}`))
     );
   }
 

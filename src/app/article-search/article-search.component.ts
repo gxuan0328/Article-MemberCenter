@@ -23,10 +23,6 @@ export class ArticleSearchComponent implements OnInit {
 
   constructor(private articleService: ArticleService) { }
 
-  public search(term: string): void{
-    this.searchTerm.next(term);
-  }
-
   public ngOnInit(): void {
     this.articles$ = this.searchTerm.pipe(
       debounceTime(300),
@@ -34,5 +30,11 @@ export class ArticleSearchComponent implements OnInit {
       switchMap((term: string) => this.articleService.searchArticle(term))
     );
   }
+
+  public search(term: string): void{
+    this.searchTerm.next(term);
+  }
+
+
 
 }

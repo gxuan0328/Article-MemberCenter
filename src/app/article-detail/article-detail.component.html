@@ -12,7 +12,9 @@
     <!-- <textarea #textbox  (change)="article.content=textbox.value">{{article.content}}</textarea> -->
     <div class="footer">
         <button (click)="goBack()">back</button>
-        <button routerLink="/detail/{{article.id}}/edit">edit</button>
+        <button  *ngIf="userName===article.author" (click)="delete()">delete</button>
+        <button  *ngIf="userName===article.author" routerLink="/detail/{{article.id}}/edit">edit</button>
+        <!-- *ngIf="userName===article.author" -->
     </div>
     
 </div>
