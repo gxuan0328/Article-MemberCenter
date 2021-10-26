@@ -20,6 +20,8 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ArticleSearchComponent } from './article-search/article-search.component';
 import { LoginComponent } from './login/login.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { LoginComponent } from './login/login.component';
     ArticleEditComponent,
     ArticleAddComponent,
     ArticleSearchComponent,
-    LoginComponent
+    LoginComponent,
+    ToolbarComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,8 @@ import { LoginComponent } from './login/login.component';
     MatFormFieldModule,
     MatCheckboxModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

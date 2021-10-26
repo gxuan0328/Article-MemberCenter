@@ -1,0 +1,22 @@
+<mat-toolbar color="primary">
+    <a routerLink="/articles"><span>Article List</span></a>
+    <span class="example-spacer"></span>
+    <button *ngIf="!flag else logout" mat-raised-button color="primary" routerLink="/login">
+        <span>LOGIN</span>
+        <mat-icon>account_circle</mat-icon>
+    </button>
+    <ng-template #logout>
+        <button mat-raised-button color="primary" routerLink="/articles/add" [disabled]="!flag">
+            <mat-icon>add</mat-icon>
+        </button> 
+        <button mat-raised-button color="primary" (click)="Logout()">
+            <span>Hi, {{userName}}</span>
+            <mat-icon>account_circle</mat-icon>
+        </button>
+    </ng-template>
+
+    <!-- <button mat-icon-button color="basic" aria-label="Example icon button with a home icon">
+        <mat-icon>home</mat-icon>
+    </button> -->
+
+</mat-toolbar>

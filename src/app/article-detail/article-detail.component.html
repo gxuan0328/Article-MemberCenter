@@ -1,4 +1,4 @@
-
+<app-toolbar></app-toolbar>
 <div *ngIf="article">
     <div class="header" >
         <h1>{{article.title | uppercase}}</h1>
@@ -11,9 +11,19 @@
     
     <!-- <textarea #textbox  (change)="article.content=textbox.value">{{article.content}}</textarea> -->
     <div class="footer">
-        <button (click)="goBack()">back</button>
+        <button mat-raised-button color="primary" (click)="goBack()">
+            <mat-icon>reply</mat-icon>
+        </button>
+        <button *ngIf="userName===article.author" (click)="delete()" mat-raised-button color="warn">
+            <mat-icon>delete</mat-icon>
+        </button>
+        <button *ngIf="userName===article.author" routerLink="/detail/{{article.id}}/edit" mat-raised-button color="primary">
+            <mat-icon>edit</mat-icon>
+        </button>
+        
+        <!-- <button (click)="goBack()">back</button>
         <button  *ngIf="userName===article.author" (click)="delete()">delete</button>
-        <button  *ngIf="userName===article.author" routerLink="/detail/{{article.id}}/edit">edit</button>
+        <button  *ngIf="userName===article.author" routerLink="/detail/{{article.id}}/edit">edit</button> -->
         <!-- *ngIf="userName===article.author" -->
     </div>
     

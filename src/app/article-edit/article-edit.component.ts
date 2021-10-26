@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ArticleService } from '../article.service';
 import { Article } from '../article';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-article-edit',
@@ -14,6 +15,12 @@ export class ArticleEditComponent implements OnInit {
   flag: boolean =false;
   userID: number = 0;
   userName: string = 'Guset';
+
+  form:FormGroup = new FormGroup({
+    Title: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+    Author: new FormControl({value:this.userName, disabled: true}, [Validators.required, Validators.minLength(3)] ),
+    Content: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+  });
 
   private _article: Article = {
     id: 0,
@@ -30,6 +37,8 @@ export class ArticleEditComponent implements OnInit {
     this._article = article;
   }
 
+
+
   constructor(
     private route: ActivatedRoute,
     private articleService: ArticleService,
@@ -39,12 +48,16 @@ export class ArticleEditComponent implements OnInit {
   public ngOnInit(): void {
     this.getArticle();
     this.getUserStatus();
+    
   }
 
   private getArticle(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.articleService.getArticle(id)
-      .subscribe(article => this.article = article.Data);
+      .subscribe(article => {
+        this.article = article.Data;
+        this.form.setValue({Title:this.article.title, Author:this.article.author, Content:this.article.content});
+      });
   }
 
   public goBack(): void {
@@ -53,8 +66,12 @@ export class ArticleEditComponent implements OnInit {
 
   public save(): void {
     if (this.article) {
-      this.articleService.updateArticle(this.article)
-        .subscribe(() => this.goBack());
+      const id = Number(this.route.snapshot.paramMap.get('id'));
+      this.articleService.updateArticle(this.article,id)
+        .subscribe(() => {
+          alert('Success update an article');
+          this.goBack();
+        });
     }
   }
 

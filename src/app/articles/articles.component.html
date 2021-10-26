@@ -1,89 +1,68 @@
+<app-toolbar></app-toolbar>
 <h1>Article List</h1>
 
 <div class="container"> 
-    <div *ngIf="!flag else logout" class="member">
-        <button  class="login" routerLink="/login">LOGIN</button>
-    </div>
-    <ng-template #logout>
-        <div class="member">
-            <div class="hello">Welcome, {{userName}}</div>
-            <button class="login" (click)="Logout()">LOGOUT</button>
-        </div>
-    </ng-template>
     <div class="box">
         <h2>NEWS</h2>
-        <app-article-search></app-article-search>
-        
-        <button routerLink="/articles/add" [disabled]="!flag">+</button>        
+        <app-article-search></app-article-search>   
     </div>
     <div class="tab-list">
         <mat-tab-group animationDuration="0ms">
             <mat-tab label="Sports">
                 <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: p, id: 'second'}">
+                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: p}" >
             
-                            <a routerLink="/detail/{{article.id}}">
+                            <a routerLink="/detail/{{article.id}}" >
                                 <h3 class="title">{{article.title}}</h3> <span class="name">{{article.author}}</span>
                             </a>
                     </li>
                 </ul>
-                <div class="pagination">
-                    <pagination-controls id="second" (pageChange)="p = $event"></pagination-controls>
-                </div>
             </mat-tab>
             <mat-tab label="Business">
                 <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: n}">
+                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: p}">
             
                             <a routerLink="/detail/{{article.id}}">
                                 <h3 class="title">{{article.title}}</h3> <span class="name">{{article.author}}</span>
                             </a>
                     </li>
                 </ul>
-                <div class="pagination">
-                    <pagination-controls (pageChange)="n = $event"></pagination-controls>
-                </div>
             </mat-tab>
             <mat-tab label="World">
                 <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: n}">
+                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: p}">
             
                             <a routerLink="/detail/{{article.id}}">
                                 <h3 class="title">{{article.title}}</h3> <span class="name">{{article.author}}</span>
                             </a>
                     </li>
                 </ul>
-                <div class="pagination">
-                    <pagination-controls (pageChange)="n = $event"></pagination-controls>
-                </div>
             </mat-tab>
             <mat-tab label="Life">
                 <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: n}">
+                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: p}">
             
                             <a routerLink="/detail/{{article.id}}">
                                 <h3 class="title">{{article.title}}</h3> <span class="name">{{article.author}}</span>
                             </a>
                     </li>
                 </ul>
-                <div class="pagination">
-                    <pagination-controls (pageChange)="n = $event"></pagination-controls>
-                </div>
             </mat-tab>
-            <mat-tab label="Test">
+            <mat-tab label="Education">
                 <ul>
-                    <li *ngFor="let t of test | paginate:{itemsPerPage: 4, currentPage: q, id: 'first'}">
+                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: p}">
             
-                            <a routerLink="/detail/{{t.id}}">
-                                <h3 class="title">{{t.title}}</h3> <span class="name">{{t.author}}</span>
+                            <a routerLink="/detail/{{article.id}}">
+                                <h3 class="title">{{article.title}}</h3> <span class="name">{{article.author}}</span>
                             </a>
                     </li>
                 </ul>
-                <div class="pagination">
-                    <pagination-controls id="first" (pageChange)="q = $event"></pagination-controls>
-                </div>
             </mat-tab>
+
         </mat-tab-group>
+        <div class="pagination">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
     </div>
 
 

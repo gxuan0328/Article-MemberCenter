@@ -1,22 +1,22 @@
-<div>
+<app-toolbar></app-toolbar>
+<form [formGroup]="form">
     <div class="header" >
         <h1>[ CREATE MODE ]</h1>
     </div>
     <div class="detail">
-        <textarea class="title" #title type="text" placeholder="Article Title"></textarea>
-        <!-- <input class="author" #author type="text" placeholder="Author"> -->
-        <input class="author" #author type="text" value={{userName}} disabled>
+        <textarea formControlName="Title" class="title" type="text" placeholder="Article Title" [class.invalid]="form.get('Title')?.touched&&form.get('Title')?.invalid"></textarea>
+        <input formControlName="Author" class="author" type="text">
     </div>
     <div class="content">
-        <textarea class="textbox" #textbox  placeholder="Context..."></textarea>
+        <textarea formControlName="Content" class="textbox" placeholder="Content..." [class.invalid]="form.get('Content')?.touched&&form.get('Content')?.invalid"></textarea>
     </div>
     
     
     <div class="footer">
         <button (click)="goBack()">back</button>
-        <button (click)="add(title.value,author.value,textbox.value)">add</button>
+        <button [disabled]="form.invalid" (click)="add()">add</button>
 
     </div>
     
-</div>
+</form>
 

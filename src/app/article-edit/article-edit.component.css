@@ -32,6 +32,9 @@ textarea.textbox {
     text-align: center;
 }
 button {
+    margin: 20px 20px;
+}
+/* button {
     background-color: #E0E0E0;
     margin: 10px;
     border-radius: 4px;
@@ -45,7 +48,7 @@ button:hover {
 button:active {
     background-color: #525252;
     color: #fafafa;
-}
+} */
 input {
     display: inline;
     font-size: 16px;
@@ -63,10 +66,18 @@ textarea.title{
 
     display: inline;
     font-size: 30px;
-    border-style: none;
+    border-style: solid;
     width: 100%;
     height: 70px;
     text-align: center;
     resize: none;
     font-weight: bold;
+}
+textarea:focus { 
+    outline: none;
+    border-color: #719ECE;
+    box-shadow: 0 0 10px #719ECE;
+}
+.invalid{
+    border-color: red;
 }

@@ -1,8 +1,16 @@
 <div>
-    <input #searchBox id="search-box" (input)="search(searchBox.value)" placeholder="search article title"/>
+    <!-- <input #searchBox (input)="search(searchBox.value)" placeholder="search article title"/> -->
+    <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label><mat-icon>search</mat-icon></mat-label>
+        <input matInput #searchBox (input)="search(searchBox.value)" placeholder="search article title">
+    </mat-form-field>
     <ul class="search-result">
         <li *ngFor="let article of articles$ | async">
             <a routerLink="/detail/{{article.id}}">{{article.title}}</a>
         </li>
     </ul>
 </div>
+<!-- <mat-form-field class="example-full-width" appearance="outline">
+    <mat-label><mat-icon>search</mat-icon></mat-label>
+    <input matInput #searchBox (input)="search(searchBox.value)" placeholder="search article title">
+</mat-form-field> -->

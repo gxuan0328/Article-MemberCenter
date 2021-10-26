@@ -32,16 +32,9 @@ export class LoginComponent implements OnInit {
         this.articleService.getUser(this.form.get('UserName')?.value,this.form.get('Password')?.value).
             subscribe( (user) => {
                 console.log(user.StatusCode);
-                if(user.StatusCode == 200){
-                    alert('GOOD');
-                    console.log(user.Data);
+                    alert(user.Message);
                     this.articleService.Login(user.Data);
                     this.router.navigate(['articles']);
-                }
-                else{
-                    alert('incorrect username or password');
-                    console.log(user.Data);
-                }
             });
      }
 }

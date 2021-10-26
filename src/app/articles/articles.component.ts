@@ -18,9 +18,6 @@ export class ArticlesComponent implements OnInit {
   p: number = 0;
 
   private _test: Article[] = [];
-  q: number = 0;
-
-  n: number = 0;
 
   public get articles(): Article[] {
     return this._articles;
@@ -41,8 +38,6 @@ export class ArticlesComponent implements OnInit {
 
   constructor(private articleService: ArticleService) {
     this.p = 1;
-    this.q = 1;
-    this.n = 1;
   }
 
   public ngOnInit(): void {
@@ -58,8 +53,8 @@ export class ArticlesComponent implements OnInit {
   private getArticles(): void {
     this.articleService.getArticles()
       .subscribe(articles => { 
-        this.articles = articles.Data;
-        console.log(articles);
+          this.articles = articles.Data;
+          console.log(articles);
       });
   }
 
@@ -72,8 +67,10 @@ export class ArticlesComponent implements OnInit {
   }
 
   public Logout(): void {
-    this.articleService.Logout();
-    this.getUserStatus();
+    if(confirm('Are you sure to logout?')){
+      this.articleService.Logout();
+      this.getUserStatus();
+    }
   }
 
 

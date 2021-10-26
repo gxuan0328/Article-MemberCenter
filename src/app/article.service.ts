@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, filter, tap } from 'rxjs/operators';
 import { Article } from './article';
 import { Response } from './response';
 import { User } from './user';
@@ -47,6 +47,16 @@ export class ArticleService {
     return this.http.get<Response<Article[]>>(this.articlesUrl)
       .pipe(
         tap(_ => console.log('fetch article')),
+        filter(article => {
+          if (article.StatusCode === 200) {
+            return true;
+          }
+          else{
+            console.log(article.Message);
+            alert('system error');
+            return false;
+          }
+        }),
         catchError(this.handleError<Response<Article[]>>('getArticles', {StatusCode: 0, Message: 'failed update', Data: []}))
       );
   }
@@ -55,13 +65,44 @@ export class ArticleService {
     const url = `${this.articlesUrl}/detail/${id}`;
     return this.http.get<Response<Article>>(url).pipe(
       tap(_ => console.log('fetch article')),
+      filter(article => {
+        if (article.StatusCode === 200) {
+          return true;
+        } 
+        else if(article.StatusCode === 404){
+          console.log(article.Message);
+          alert(article.Message);
+          return false;
+        }
+        else{
+          console.log(article.Message);
+          alert('system error');
+          return false;
+        }
+      }),
       catchError(this.handleError<Response<Article>>(`getArticle id=${id}`))
     );
   }
 
-  public updateArticle(article: Article): Observable<Response<Article>> {
-    return this.http.put<Response<Article>>(this.articlesUrl, article, this.httpOptions).pipe(
+  public updateArticle(article: Article, id: number): Observable<Response<Article>> {
+    const url = `${this.articlesUrl}/detail/${id}`;
+    return this.http.put<Response<Article>>(url, article, this.httpOptions).pipe(
       tap(_ => console.log(`update article id=${article.id}`)),
+      filter(article => {
+        if (article.StatusCode === 200) {
+          return true;
+        } 
+        else if(article.StatusCode === 404){
+          console.log(article.Message);
+          alert(article.Message);
+          return false;
+        }
+        else{
+          console.log(article.Message);
+          alert('system error');
+          return false;
+        }
+      }),
       catchError(this.handleError<Response<Article>>('updateArticle'))
     );
   }
@@ -70,13 +111,45 @@ export class ArticleService {
     const url = `${this.articlesUrl}/${id}`;
     return this.http.delete<Response<Article>>(url, this.httpOptions).pipe(
       tap(_ => console.log(`delete article id=${id}`)),
+      filter(article => {
+        if (article.StatusCode === 200) {
+          return true;
+        } 
+        else if(article.StatusCode === 404){
+          console.log(article);
+          console.log(article.Message);
+          alert(article.Message);
+          return false;
+        }
+        else{
+          console.log(article.Message);
+          alert('system error');
+          return false;
+        }
+      }),
       catchError(this.handleError<Response<Article>>('deleteArticle'))
     );
   }
 
   public addArticle(article: Article): Observable<Response<Article>> {
     return this.http.post<Response<Article>>(this.articlesUrl, article, this.httpOptions).pipe(
-      tap((newArticle: Response<Article>) => console.log(`added article w/ id=${newArticle.Data.id}`)),
+      tap((newArticle: Response<Article>) => console.log('success add a new article')),
+      filter(article => {
+        if (article.StatusCode === 200) {
+          return true;
+        } 
+        else if(article.StatusCode === 404){
+          console.log(article);
+          console.log(article.Message);
+          alert(article.Message);
+          return false;
+        }
+        else{
+          console.log(article.Message);
+          alert('system error');
+          return false;
+        }
+      }),
       catchError(this.handleError<Response<Article>>('addArticle'))
     );
   }
@@ -88,13 +161,30 @@ export class ArticleService {
     }
     return this.http.get<Article[]>(`${this.articlesUrl}/search/${term}`).pipe(
       tap(x => x.length ? console.log(`found articles matching "${term}"`) : console.log(`no articles matching "${term}"`)),
+      
       catchError(this.handleError<Article[]>('searchArticle'))
     );
   }
 
   public getUser(name: string, password: string): Observable<Response<User>> {
-    return this.http.get<Response<User>>(`${this.articlesUrl}/getUser`,{params:{UserName:name, Password:password}}).pipe(
+    return this.http.get<Response<User>>(`${this.articlesUrl}/login`,{params:{UserName:name, Password:password}}).pipe(
       tap(_ => console.log('fetch user')),
+      filter(article => {
+        if (article.StatusCode === 200) {
+          return true;
+        } 
+        else if(article.StatusCode === 404){
+          console.log(article);
+          console.log(article.Message);
+          alert(article.Message);
+          return false;
+        }
+        else{
+          console.log(article.Message);
+          alert('system error');
+          return false;
+        }
+      }),
       catchError(this.handleError<Response<User>>(`getUser name=${name}`))
     );
   }
