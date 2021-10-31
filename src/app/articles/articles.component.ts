@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Article } from '../article';
 import { ArticleService } from '../article.service';
+import { User } from '../user';
 
 @Component({
   selector: 'app-articles',
@@ -8,14 +9,22 @@ import { ArticleService } from '../article.service';
   styleUrls: ['./articles.component.css']
 })
 export class ArticlesComponent implements OnInit {
-  flag: boolean =false;
-  userID: number = 0;
-  userName: string = 'Guset';
 
-  // data: [] = [];
+  public status: User = {
+    ID: 0,
+    UserName: 'Guset',
+    UserStatus: 0
+  };
+
+
+
+  // flag: boolean =false;
+  // userID: number = 0;
+  // userName: string = 'Guset';
+
 
   private _articles: Article[] = [];
-  p: number = 0;
+  public p: number = 0;
 
   private _test: Article[] = [];
 
@@ -43,10 +52,10 @@ export class ArticlesComponent implements OnInit {
   public ngOnInit(): void {
     this.getArticles();
     this.getUserStatus();
-    console.log('user status: ',this.articleService.userStatus());
+    console.log('user status: ',this.articleService.getUserStatus());
     // this.getTest();
     // this.getDataFromAPI();
-    // this.getUser();
+    // this.userLogin();
   }
 
 
@@ -59,11 +68,9 @@ export class ArticlesComponent implements OnInit {
   }
 
   private getUserStatus(): void {
-    let status = this.articleService.userStatus();
+    let status = this.articleService.getUserStatus();
     console.log(status);
-    this.flag = status.flag;
-    this.userID = status.userID;
-    this.userName = status.userName;
+    this.status = status;
   }
 
   public Logout(): void {
@@ -86,8 +93,8 @@ export class ArticlesComponent implements OnInit {
   //   );
   // }
 
-  // private getUser(): void {
-  //   this.articleService.getUser()
+  // private userLogin(): void {
+  //   this.articleService.userLogin()
   //     .subscribe(articles => { 
   //       console.log('user data',articles);
   //     });

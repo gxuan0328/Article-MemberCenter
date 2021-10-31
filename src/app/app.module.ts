@@ -22,6 +22,7 @@ import { ArticleSearchComponent } from './article-search/article-search.componen
 import { LoginComponent } from './login/login.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { MatIconModule } from '@angular/material/icon';
+import { SignComponent } from './sign/sign.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { MatIconModule } from '@angular/material/icon';
     ArticleAddComponent,
     ArticleSearchComponent,
     LoginComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    SignComponent
   ],
   imports: [
     BrowserModule,

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ArticleService } from '../article.service';
 import { Article } from '../article';
+import { User } from '../user';
 
 @Component({
   selector: 'app-article-detail',
@@ -11,16 +12,27 @@ import { Article } from '../article';
 })
 export class ArticleDetailComponent implements OnInit {
 
-  flag: boolean =false;
-  userID: number = 0;
-  userName: string = 'Guset';
+  public status: User = {
+    ID: 0,
+    UserName: 'Guset',
+    UserStatus: 0
+  };
+
+  public time : string = '';
+
+  // flag: boolean =false;
+  // userID: number = 0;
+  // userName: string = 'Guset';
   
 
   @Input() _article: Article = {
-    id: 0,
-    title: '',
-    author: '',
-    content: ''
+    ID: 0,
+    Title: '',
+    User_ID: 0,
+    Author: '',
+    Content: '',
+    CreateDatetime: '',
+    UpdateDatetime: '',
   };
 
   public get article(): Article {
@@ -41,14 +53,13 @@ export class ArticleDetailComponent implements OnInit {
   public ngOnInit(): void {
     this.getArticle();
     this.getUserStatus();
+
   }
 
   private getUserStatus(): void {
-    let status = this.articleService.userStatus();
+    let status = this.articleService.getUserStatus();
     console.log(status);
-    this.flag = status.flag;
-    this.userID = status.userID;
-    this.userName = status.userName;
+    this.status = status;
   }
 
   private getArticle(): void {
@@ -56,6 +67,16 @@ export class ArticleDetailComponent implements OnInit {
     this.articleService.getArticle(id)
       .subscribe(article => {
           this.article = article.Data;
+          console.log('A', this.article);
+          // this.time = JSON.stringify(article.Data.CreateDatetime).substr(1,19).replace('T',' ');
+          // console.log(this.time);
+          // let Ntime = Date.parse(this.time);
+          // console.log(Ntime);
+          // let Ctime = new Date(Ntime).toLocaleString();
+          // console.log(Ctime);
+
+          this.time = new Date(Date.parse(JSON.stringify(article.Data.UpdateDatetime).substr(1,19).replace('T',' '))).toLocaleString();
+
       });
   }
 

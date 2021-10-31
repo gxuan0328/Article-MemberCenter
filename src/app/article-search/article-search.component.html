@@ -6,7 +6,7 @@
     </mat-form-field>
     <ul class="search-result">
         <li *ngFor="let article of articles$ | async">
-            <a routerLink="/detail/{{article.id}}">{{article.title}}</a>
+            <a routerLink="/detail/{{article.ID}}">{{article.Title}}</a>
         </li>
     </ul>
 </div>

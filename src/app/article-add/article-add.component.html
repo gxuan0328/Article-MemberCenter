@@ -13,8 +13,12 @@
     
     
     <div class="footer">
-        <button (click)="goBack()">back</button>
-        <button [disabled]="form.invalid" (click)="add()">add</button>
+        <button mat-raised-button color="primary" (click)="goBack()">
+            <mat-icon>reply</mat-icon>
+        </button>
+        <button mat-raised-button  [disabled]="form.invalid" (click)="add()">
+            <mat-icon>done</mat-icon>
+        </button>
 
     </div>
     

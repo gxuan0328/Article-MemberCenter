@@ -15,32 +15,49 @@ export class ArticleService {
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
-  
 
-  flag: boolean =false;
-  userID: number = 0;
-  userName: string = 'Guset';
+  public status: User = {
+    ID: 0,
+    UserName: 'Guset',
+    UserStatus: 0
+  };
+
+
+
+
+
+  // flag: boolean =false;
+  // userID: number = 0;
+  // userName: string = 'Guset';
 
   constructor(private http: HttpClient) { }
 
   public Login(user: User): void {
-    this.flag = true;
-    this.userID = user.UserID;
-    this.userName = user.UserName;
+    this.status = user;
+
+    // this.flag = true;
+    // this.userID = user.ID;
+    // this.userName = user.UserName;
   }
 
   public Logout(): void {
-    this.flag = false;
-    this.userID = 0;
-    this.userName = 'Guset';
+    this.status = {
+      ID: 0,
+      UserName: 'Guset',
+      UserStatus: 0
+    };
+
+    // this.flag = false;
+    // this.userID = 0;
+    // this.userName = 'Guset';
   }
 
-  public userStatus() {
-    return {
-      flag: this.flag,
-      userID: this.userID,
-      userName:this.userName,
-    };
+  // public TEST(): Observable<User> {
+  //   return of(this.status);
+  // }
+
+  public getUserStatus() {
+    return this.status;
   }
 
   public getArticles(): Observable<Response<Article[]>> {
@@ -87,7 +104,7 @@ export class ArticleService {
   public updateArticle(article: Article, id: number): Observable<Response<Article>> {
     const url = `${this.articlesUrl}/detail/${id}`;
     return this.http.put<Response<Article>>(url, article, this.httpOptions).pipe(
-      tap(_ => console.log(`update article id=${article.id}`)),
+      tap(_ => console.log(`update article id=${article.ID}`)),
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
@@ -166,7 +183,7 @@ export class ArticleService {
     );
   }
 
-  public getUser(name: string, password: string): Observable<Response<User>> {
+  public userLogin(name: string, password: string): Observable<Response<User>> {
     return this.http.get<Response<User>>(`${this.articlesUrl}/login`,{params:{UserName:name, Password:password}}).pipe(
       tap(_ => console.log('fetch user')),
       filter(article => {
@@ -185,9 +202,34 @@ export class ArticleService {
           return false;
         }
       }),
-      catchError(this.handleError<Response<User>>(`getUser name=${name}`))
+      catchError(this.handleError<Response<User>>(`userLogin name=${name}`))
     );
   }
+
+  public userSignUp(name: string, password: string): Observable<Response<User>> {
+    return this.http.post<Response<User>>(`${this.articlesUrl}/signin`,{UserName:name, Password:password}).pipe(
+      tap(_ => console.log('create account')),
+      filter(article => {
+        if (article.StatusCode === 200) {
+          return true;
+        } 
+        else if(article.StatusCode === 404){
+          console.log(article);
+          console.log(article.Message);
+          alert(article.Message);
+          return false;
+        }
+        else{
+          console.log(article.Message);
+          alert('system error');
+          return false;
+        }
+      }),
+      catchError(this.handleError<Response<User>>(`userSignUp name=${name}`))
+    );
+  }
+
+
 
 
 

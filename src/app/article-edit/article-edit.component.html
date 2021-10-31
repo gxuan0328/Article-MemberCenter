@@ -5,12 +5,12 @@
             <h1>[ EDIT MODE ]</h1>
         </div>
         <div class="detail">
-            <textarea formControlName="Title" class="title"  type="text"  [(ngModel)]="article.title" placeholder="Article Title" [class.invalid]="form.get('Title')?.touched&&form.get('Title')?.invalid"></textarea>
+            <textarea formControlName="Title" class="title"  type="text"  [(ngModel)]="article.Title" placeholder="Article Title" [class.invalid]="form.get('Title')?.touched&&form.get('Title')?.invalid"></textarea>
             <!-- <input class="author" #author type="text" value={{article.author}} (change)="article.author=author.value" placeholder="Author"> -->
-            <input formControlName="Author" class="author"  type="text" value={{userName}} >
+            <input formControlName="Author" class="author"  type="text" value={{status.UserName}} >
         </div>
         <div class="content">
-            <textarea formControlName="Content" class="textbox" type="text" [(ngModel)]="article.content" placeholder="Content..." [class.invalid]="form.get('Content')?.touched&&form.get('Content')?.invalid"></textarea>
+            <textarea formControlName="Content" class="textbox" type="text" [(ngModel)]="article.Content" placeholder="Content..." [class.invalid]="form.get('Content')?.touched&&form.get('Content')?.invalid"></textarea>
         </div>
         
         

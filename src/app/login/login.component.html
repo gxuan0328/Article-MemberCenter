@@ -24,7 +24,12 @@
         <input formControlName="Password" type="text" placeholder="Password"><br>
         <small *ngIf="form.get('Password')?.invalid && form.get('Password')?.touched">Password is Require</small>
       </div> -->
-      <button [disabled]="form.invalid" (click)="Login()">Login</button>
+      <button mat-raised-button color="basic" routerLink="/signin">
+        <mat-icon>person_add</mat-icon>
+      </button>
+      <button [disabled]="form.invalid" (click)="Login()" mat-raised-button color="primary">
+        <mat-icon>login</mat-icon>
+      </button>
     </form>
   </div>
   

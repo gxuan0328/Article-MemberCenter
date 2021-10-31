@@ -5,6 +5,7 @@ import { ArticleDetailComponent } from './article-detail/article-detail.componen
 import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { ArticlesComponent } from './articles/articles.component';
 import { LoginComponent } from './login/login.component';
+import { SignComponent } from './sign/sign.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/articles', pathMatch: 'full' },
@@ -12,7 +13,8 @@ const routes: Routes = [
   { path: 'detail/:id', component: ArticleDetailComponent },
   { path: 'detail/:id/edit', component: ArticleEditComponent },
   { path: 'articles/add', component:ArticleAddComponent},
-  { path: 'login', component:LoginComponent}
+  { path: 'login', component:LoginComponent},
+  { path: 'signin', component:SignComponent}
 ];
 
 @NgModule({

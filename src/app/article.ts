@@ -1,8 +1,11 @@
 export interface Article {
-    id: number;
-    title: string;
-    author: string;
-    content: string;
+    ID: number;
+    Title: string;
+    User_ID: number
+    Author: string;
+    Content: string;
+    CreateDatetime: string;
+    UpdateDatetime: string;
 }
 
 // export interface IResponseFormat<T> {

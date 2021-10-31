@@ -1,16 +1,16 @@
 <mat-toolbar color="primary">
     <a routerLink="/articles"><span>Article List</span></a>
     <span class="example-spacer"></span>
-    <button *ngIf="!flag else logout" mat-raised-button color="primary" routerLink="/login">
+    <button *ngIf="!status.UserStatus else logout" mat-raised-button color="primary" routerLink="/login">
         <span>LOGIN</span>
         <mat-icon>account_circle</mat-icon>
     </button>
     <ng-template #logout>
-        <button mat-raised-button color="primary" routerLink="/articles/add" [disabled]="!flag">
+        <button mat-raised-button color="primary" routerLink="/articles/add" [disabled]="!status.UserStatus">
             <mat-icon>add</mat-icon>
         </button> 
         <button mat-raised-button color="primary" (click)="Logout()">
-            <span>Hi, {{userName}}</span>
+            <span>Hi, {{status.UserName}}</span>
             <mat-icon>account_circle</mat-icon>
         </button>
     </ng-template>

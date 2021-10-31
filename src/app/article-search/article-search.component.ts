@@ -10,7 +10,7 @@ import { ArticleService } from '../article.service';
 })
 export class ArticleSearchComponent implements OnInit {
 
-  public _articles$!: Observable<Article[]>;
+  private _articles$!: Observable<Article[]>;
   private searchTerm = new Subject<string>();
 
   public get articles$(): Observable<Article[]> {
