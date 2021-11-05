@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ArticlesComponent } from './articles/articles.component';
@@ -23,6 +22,12 @@ import { LoginComponent } from './login/login.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { SignComponent } from './sign/sign.component';
+import { JwtModule } from '@auth0/angular-jwt';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+export function tokenGetter() {
+  return localStorage.getItem('access_token');
+}
 
 @NgModule({
   declarations: [
@@ -51,6 +56,12 @@ import { SignComponent } from './sign/sign.component';
     MatInputModule,
     ReactiveFormsModule,
     MatIconModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+      },
+    }),
+    MatTooltipModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

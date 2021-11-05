@@ -1,24 +1,19 @@
-<app-toolbar></app-toolbar>
 <div class="container">
   <div class="loginbox">
     <h1>SIGN UP</h1>
-
-
     <form [formGroup]="form">
       <mat-form-field appearance="fill">
         <mat-label>UserName</mat-label>
-        <input matInput formControlName="UserName">
+        <input matInput formControlName="userName">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Password</mat-label>
-        <input matInput formControlName="Password" type="password"> 
+        <input matInput formControlName="password" type="password">
       </mat-form-field>
       <br>
-
-      <button [disabled]="form.invalid" (click)="Submit()" mat-raised-button color="primary">
+      <button [disabled]="form.invalid" (click)="submit()" mat-raised-button matTooltip="submit" color="primary">
         <mat-icon>check</mat-icon>
       </button>
     </form>
   </div>
-  
 </div>

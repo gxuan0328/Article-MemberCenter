@@ -1,16 +1,14 @@
-<app-toolbar></app-toolbar>
-<h1>Article List</h1>
-
 <div class="container"> 
     <div class="box">
         <h2>NEWS</h2>
         <app-article-search></app-article-search>   
+
     </div>
     <div class="tab-list">
         <mat-tab-group animationDuration="0ms">
             <mat-tab label="Sports">
                 <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: p}" >
+                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: page}" >
             
                             <a routerLink="/detail/{{article.ID}}" >
                                 <h3 class="title">{{article.Title}}</h3> <span class="name">{{article.Author}}</span>
@@ -20,7 +18,7 @@
             </mat-tab>
             <mat-tab label="Business">
                 <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: p}">
+                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: page}">
             
                             <a routerLink="/detail/{{article.ID}}">
                                 <h3 class="title">{{article.Title}}</h3> <span class="name">{{article.Author}}</span>
@@ -30,7 +28,7 @@
             </mat-tab>
             <mat-tab label="World">
                 <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: p}">
+                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: page}">
             
                             <a routerLink="/detail/{{article.ID}}">
                                 <h3 class="title">{{article.Title}}</h3> <span class="name">{{article.Author}}</span>
@@ -40,7 +38,7 @@
             </mat-tab>
             <mat-tab label="Life">
                 <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: p}">
+                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: page}">
             
                             <a routerLink="/detail/{{article.ID}}">
                                 <h3 class="title">{{article.Title}}</h3> <span class="name">{{article.Author}}</span>
@@ -50,7 +48,7 @@
             </mat-tab>
             <mat-tab label="Education">
                 <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: p}">
+                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: page}">
             
                             <a routerLink="/detail/{{article.ID}}">
                                 <h3 class="title">{{article.Title}}</h3> <span class="name">{{article.Author}}</span>
@@ -61,14 +59,7 @@
 
         </mat-tab-group>
         <div class="pagination">
-            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+            <pagination-controls (pageChange)="page = $event" ></pagination-controls>
         </div>
-    </div>
-
-
-
-
-
-
-      
+    </div>   
 </div>

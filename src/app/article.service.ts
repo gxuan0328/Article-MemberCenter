@@ -1,80 +1,92 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { catchError, filter, map, tap } from 'rxjs/operators';
 import { Article } from './article';
 import { Response } from './response';
 import { User } from './user';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Router } from '@angular/router';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ArticleService {
 
-  
   private articlesUrl = 'api';
+
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  public status: User = {
+  private _status: User = {
     ID: 0,
     UserName: 'Guset',
-    UserStatus: 0
+    UserStatus: 0,
+    exp: 0,
+    iat: 0
   };
 
-
-
-
-
-  // flag: boolean =false;
-  // userID: number = 0;
-  // userName: string = 'Guset';
-
-  constructor(private http: HttpClient) { }
-
-  public Login(user: User): void {
-    this.status = user;
-
-    // this.flag = true;
-    // this.userID = user.ID;
-    // this.userName = user.UserName;
+  public get status(): User {
+    return this._status;
   }
 
-  public Logout(): void {
-    this.status = {
+  private set status(status: User) {
+    this._status = status;
+  }
+
+  private _userStatus = new BehaviorSubject<User>(this.status);
+
+  public get userStatus(): BehaviorSubject<User> {
+    return this._userStatus;
+  }
+
+  private set userStatus(userStatus: BehaviorSubject<User>) {
+    this._userStatus = userStatus;
+  }
+
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private jwt: JwtHelperService,
+  ) { }
+
+  public login(user: User): void {
+    this.userStatus.next(user);
+    console.log(user);
+  }
+
+  public logout(): void {
+    let guest = {
       ID: 0,
       UserName: 'Guset',
-      UserStatus: 0
+      UserStatus: 0,
+      exp: 0,
+      iat: 0
     };
-
-    // this.flag = false;
-    // this.userID = 0;
-    // this.userName = 'Guset';
+    this.userStatus.next(guest);
+    localStorage.removeItem('TOKEN');
   }
 
-  // public TEST(): Observable<User> {
-  //   return of(this.status);
-  // }
-
-  public getUserStatus() {
-    return this.status;
+  public getUserStatus(): Observable<User> {
+    return this.userStatus;
   }
 
   public getArticles(): Observable<Response<Article[]>> {
     return this.http.get<Response<Article[]>>(this.articlesUrl)
       .pipe(
-        tap(_ => console.log('fetch article')),
+        tap(_ => console.log('fetch all article')),
         filter(article => {
           if (article.StatusCode === 200) {
             return true;
           }
-          else{
+          else {
             console.log(article.Message);
             alert('system error');
             return false;
           }
         }),
-        catchError(this.handleError<Response<Article[]>>('getArticles', {StatusCode: 0, Message: 'failed update', Data: []}))
+        catchError(this.handleError<Response<Article[]>>('getArticles', { StatusCode: 0, Message: 'failed update', Data: [] }))
       );
   }
 
@@ -85,15 +97,17 @@ export class ArticleService {
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
-        } 
-        else if(article.StatusCode === 404){
+        }
+        else if (article.StatusCode === 404) {
           console.log(article.Message);
           alert(article.Message);
+          this.router.navigate(['articles']);
           return false;
         }
-        else{
+        else {
           console.log(article.Message);
           alert('system error');
+          this.router.navigate(['articles']);
           return false;
         }
       }),
@@ -108,13 +122,22 @@ export class ArticleService {
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
-        } 
-        else if(article.StatusCode === 404){
+        }
+        else if (article.StatusCode === 404) {
           console.log(article.Message);
           alert(article.Message);
           return false;
         }
-        else{
+        else if (article.StatusCode === 401 || article.StatusCode === 403) {
+          console.log(article.Message);
+          console.log(article);
+          alert(article.Message);
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else {
+          console.log(article);
           console.log(article.Message);
           alert('system error');
           return false;
@@ -131,14 +154,23 @@ export class ArticleService {
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
-        } 
-        else if(article.StatusCode === 404){
+        }
+        else if (article.StatusCode === 404) {
           console.log(article);
           console.log(article.Message);
           alert(article.Message);
+          this.router.navigate(['articles']);
           return false;
         }
-        else{
+        else if (article.StatusCode === 401 || article.StatusCode === 403) {
+          console.log(article.Message);
+          alert(article.Message);
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else {
+          console.log(article);
           console.log(article.Message);
           alert('system error');
           return false;
@@ -149,20 +181,28 @@ export class ArticleService {
   }
 
   public addArticle(article: Article): Observable<Response<Article>> {
-    return this.http.post<Response<Article>>(this.articlesUrl, article, this.httpOptions).pipe(
-      tap((newArticle: Response<Article>) => console.log('success add a new article')),
+    return this.http.post<Response<Article>>(this.articlesUrl, article, this.httpOptions,).pipe(
+      tap(_ => console.log('success add a new article')),
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
-        } 
-        else if(article.StatusCode === 404){
+        }
+        else if (article.StatusCode === 404) {
           console.log(article);
           console.log(article.Message);
           alert(article.Message);
           return false;
         }
-        else{
+        else if (article.StatusCode === 401 || article.StatusCode === 403) {
           console.log(article.Message);
+          alert(article.Message);
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else {
+          console.log(article.Message);
+          console.log(article);
           alert('system error');
           return false;
         }
@@ -171,55 +211,55 @@ export class ArticleService {
     );
   }
 
-  public searchArticle(term: string): Observable<Article[]> {
-    if (!term.trim()) {
-      console.log('no string');
-      return of([]);
-    }
-    return this.http.get<Article[]>(`${this.articlesUrl}/search/${term}`).pipe(
-      tap(x => x.length ? console.log(`found articles matching "${term}"`) : console.log(`no articles matching "${term}"`)),
-      
-      catchError(this.handleError<Article[]>('searchArticle'))
+  public searchArticle(term: string): Observable<Response<Article[]>> {
+    return this.http.get<Response<Article[]>>(`${this.articlesUrl}/search/${term}`).pipe(
+      tap(x => x.Data.length ? console.log(`found articles matching "${term}"`) : console.log(`no articles matching "${term}"`)),
+
+      catchError(this.handleError<Response<Article[]>>('searchArticle'))
     );
   }
 
-  public userLogin(name: string, password: string): Observable<Response<User>> {
-    return this.http.get<Response<User>>(`${this.articlesUrl}/login`,{params:{UserName:name, Password:password}}).pipe(
+  public userLogin(name: string, password: string): Observable<Response<string>> {
+    return this.http.put<Response<string>>(`${this.articlesUrl}/login`, { UserName: name, Password: password }).pipe(
       tap(_ => console.log('fetch user')),
       filter(article => {
         if (article.StatusCode === 200) {
+          this.httpOptions.headers = this.httpOptions.headers.set('Authorization', article.Data);
+          this.login(this.jwt.decodeToken(article.Data));
+          localStorage.setItem('TOKEN', article.Data);
           return true;
-        } 
-        else if(article.StatusCode === 404){
+        }
+        else if (article.StatusCode === 404) {
           console.log(article);
           console.log(article.Message);
           alert(article.Message);
           return false;
         }
-        else{
+        else {
           console.log(article.Message);
+          console.log(article);
           alert('system error');
           return false;
         }
       }),
-      catchError(this.handleError<Response<User>>(`userLogin name=${name}`))
+      catchError(this.handleError<Response<string>>(`userLogin name=${name}`))
     );
   }
 
   public userSignUp(name: string, password: string): Observable<Response<User>> {
-    return this.http.post<Response<User>>(`${this.articlesUrl}/signin`,{UserName:name, Password:password}).pipe(
+    return this.http.post<Response<User>>(`${this.articlesUrl}/sign`, { UserName: name, Password: password }).pipe(
       tap(_ => console.log('create account')),
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
-        } 
-        else if(article.StatusCode === 404){
+        }
+        else if (article.StatusCode === 404) {
           console.log(article);
           console.log(article.Message);
           alert(article.Message);
           return false;
         }
-        else{
+        else {
           console.log(article.Message);
           alert('system error');
           return false;
@@ -229,73 +269,6 @@ export class ArticleService {
     );
   }
 
-
-
-
-
-
-
-
-
-
-  // public getArticles(): Observable<Article[]> {
-  //   return this.http.get<Article[]>(this.articlesUrl)
-  //     .pipe(
-  //       tap(_ => console.log('fetch article')),
-  //       catchError(this.handleError<Article[]>('getArticles', []))
-  //     );
-  // }
-
-  // public getTest(): Observable<Article[]> {
-  //   return this.http.get<Article[]>(this.testUrl)
-  //     .pipe(
-  //       tap(_ => console.log('fetch test')),
-  //       catchError(this.handleError<Article[]>('getTest', []))
-  //     );
-  // }
-
-  // public getArticle(id: number): Observable<Article> {
-  //   const url = `${this.articlesUrl}/${id}`;
-  //   return this.http.get<Article>(url).pipe(
-  //     tap(_ => console.log('fetch article')),
-  //     catchError(this.handleError<Article>(`getArticle id=${id}`))
-  //   );
-  // }
-
-  // public updateArticle(article: Article): Observable<any> {
-  //   return this.http.put(this.articlesUrl, article, this.httpOptions).pipe(
-  //     tap(_ => console.log(`update article id=${article.id}`)),
-  //     catchError(this.handleError<any>('updateArticle'))
-  //   );
-  // }
-
-  // public addArticle(article: Article): Observable<Article> {
-  //   return this.http.post<Article>(this.articlesUrl, article, this.httpOptions).pipe(
-  //     tap((newArticle: Article) => console.log(`added article w/ id=${newArticle.id}`)),
-  //     catchError(this.handleError<Article>('addArticle'))
-  //   );
-  // }
-
-  // public deleteArticle(id: number): Observable<Article> {
-  //   const url = `${this.articlesUrl}/${id}`;
-  //   return this.http.delete<Article>(url, this.httpOptions).pipe(
-  //     tap(_ => console.log(`delete article id=${id}`)),
-  //     catchError(this.handleError<Article>('deleteArticle'))
-  //   );
-  // }
-
-  // public searchArticle(term: string): Observable<Article[]> {
-  //   if (!term.trim()) {
-  //     console.log('no string');
-  //     return of([]);
-  //   }
-  //   return this.http.get<Article[]>(`${this.articlesUrl}/?title=${term}`).pipe(
-  //     tap(x => x.length ? console.log(`found articles matching "${term}"`) : console.log(`no articles matching "${term}"`)),
-  //     catchError(this.handleError<Article[]>('searchArticle'))
-  //   );
-  // }
-
-
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.log(error);
@@ -303,5 +276,4 @@ export class ArticleService {
       return of(result as T);
     };
   }
-
 }

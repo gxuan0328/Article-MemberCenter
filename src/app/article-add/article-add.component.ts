@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ArticleService } from '../article.service';
 import { Article } from '../article';
@@ -13,23 +13,35 @@ import { User } from '../user';
 })
 export class ArticleAddComponent implements OnInit {
 
-  public status: User = {
+  private _status: User = {
     ID: 0,
     UserName: 'Guset',
-    UserStatus: 0
+    UserStatus: 0,
+    exp: 0,
+    iat: 0
   };
 
+  public get status(): User {
+    return this._status;
+  }
 
+  private set status(status: User) {
+    this._status = status;
+  }
 
-  // flag: boolean =false;
-  // userID: number = 0;
-  // userName: string = 'Guset';
-
-  public form:FormGroup = new FormGroup({
+  private _form: FormGroup = new FormGroup({
     Title: new FormControl(null, [Validators.required, Validators.minLength(3)]),
-    Author: new FormControl({value:this.status.UserName, disabled: true}, [Validators.required, Validators.minLength(3)] ),
+    Author: new FormControl({ value: this.status.UserName, disabled: true }, [Validators.required, Validators.minLength(3)]),
     Content: new FormControl(null, [Validators.required, Validators.minLength(3)]),
   });
+
+  public get form(): FormGroup {
+    return this._form;
+  }
+
+  private set form(form: FormGroup) {
+    this._form = form;
+  }
 
   constructor(
     private articleService: ArticleService,
@@ -39,7 +51,7 @@ export class ArticleAddComponent implements OnInit {
 
   public ngOnInit(): void {
     this.getUserStatus();
-    if(this.status.UserStatus === 0){
+    if (this.status.UserStatus === 0) {
       this.router.navigate(['login']);
     }
   }
@@ -53,21 +65,19 @@ export class ArticleAddComponent implements OnInit {
     let author = this.form.get('Author')?.value.trim();
     let textbox = this.form.get('Content')?.value.trim();
 
-    
     this.articleService.addArticle({ Title: title, User_ID: this.status.ID, Author: author, Content: textbox } as Article)
       .subscribe(article => {
-        console.log(article);
         alert('Success add an article');
-        this.location.back();
+        this.router.navigate(['articles']);
       });
   }
 
   private getUserStatus(): void {
-    let status = this.articleService.getUserStatus();
-    console.log(status);
-    this.status = status;
-    this.form.setValue({Title:null, Author:this.status.UserName, Content:null});
+    this.articleService.getUserStatus()
+      .subscribe(status => {
+        this.status = status;
+        this.form.setValue({ Title: null, Author: this.status.UserName, Content: null });
+      });
+
   }
-
-
 }

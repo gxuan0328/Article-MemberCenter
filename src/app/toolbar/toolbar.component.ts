@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { ArticleService } from '../article.service';
 import { User } from '../user';
 
@@ -10,45 +10,43 @@ import { User } from '../user';
 })
 export class ToolbarComponent implements OnInit {
 
-  public status: User = {
+  private _status: User = {
     ID: 0,
     UserName: 'Guset',
-    UserStatus: 0
+    UserStatus: 0,
+    exp: 0,
+    iat: 0
   };
 
+  public get status(): User {
+    return this._status;
+  }
 
+  private set status(status: User) {
+    this._status = status;
+  }
 
-  // flag: boolean =false;
-  // userID: number = 0;
-  // userName: string = 'Guset';
-
-
-  constructor(private articleService: ArticleService) { }
+  constructor(
+    private articleService: ArticleService,
+    private router: Router,
+    ) { }
 
   public ngOnInit(): void {
     this.getUserStatus();
   }
 
   private getUserStatus(): void {
-    let status = this.articleService.getUserStatus();
-    console.log(status);
-    this.status = status;
+    this.articleService.getUserStatus()
+      .subscribe(status => {
+        this.status = status;
+      });
   }
 
-  // private getUserStatus(): void {
-  //   this.articleService.TEST()
-  //     .subscribe(status => {
-  //       console.log(status);
-  //       this.status= status;
-  //     });
-
-  // }
-
-  public Logout(): void {
-    if(confirm('Are you sure to logout?')){
-      this.articleService.Logout();
+  public logout(): void {
+    if (confirm('Are you sure to logout?')) {
+      this.articleService.logout();
       this.getUserStatus();
+      this.router.navigate(['articles']);
     }
   }
-
 }

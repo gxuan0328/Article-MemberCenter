@@ -1,28 +1,24 @@
-<app-toolbar></app-toolbar>
 <div *ngIf="article">
     <form [formGroup]="form">
-        <div class="header" >
+        <div class="header">
             <h1>[ EDIT MODE ]</h1>
         </div>
         <div class="detail">
-            <textarea formControlName="Title" class="title"  type="text"  [(ngModel)]="article.Title" placeholder="Article Title" [class.invalid]="form.get('Title')?.touched&&form.get('Title')?.invalid"></textarea>
-            <!-- <input class="author" #author type="text" value={{article.author}} (change)="article.author=author.value" placeholder="Author"> -->
-            <input formControlName="Author" class="author"  type="text" value={{status.UserName}} >
+            <textarea formControlName="Title" class="title" type="text" placeholder="Article Title"
+                [class.invalid]="form.get('Title')?.touched&&form.get('Title')?.invalid"></textarea>
+            <input formControlName="Author" class="author" type="text" value={{status.UserName}}>
         </div>
         <div class="content">
-            <textarea formControlName="Content" class="textbox" type="text" [(ngModel)]="article.Content" placeholder="Content..." [class.invalid]="form.get('Content')?.touched&&form.get('Content')?.invalid"></textarea>
+            <textarea formControlName="Content" class="textbox" type="text" placeholder="Content..."
+                [class.invalid]="form.get('Content')?.touched&&form.get('Content')?.invalid"></textarea>
         </div>
-        
-        
         <div class="footer">
-            <button mat-raised-button color="primary" (click)="goBack()">
+            <button mat-raised-button matTooltip="back" color="primary" (click)="goBack()">
                 <mat-icon>reply</mat-icon>
             </button>
-            <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
+            <button mat-raised-button matTooltip="save" color="primary" [disabled]="form.invalid" (click)="save()">
                 <mat-icon>done</mat-icon>
             </button>
-            <!-- <button (click)="goBack()">back</button>
-            <button [disabled]="form.invalid" (click)="save()">update</button> -->
         </div>
-    </form>   
+    </form>
 </div>

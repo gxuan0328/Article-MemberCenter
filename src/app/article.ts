@@ -7,9 +7,3 @@ export interface Article {
     CreateDatetime: string;
     UpdateDatetime: string;
 }
-
-// export interface IResponseFormat<T> {
-//     StatusCode: number;
-//     Message: string;
-//     Data: T;
-// }

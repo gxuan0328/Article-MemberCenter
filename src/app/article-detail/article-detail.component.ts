@@ -12,18 +12,31 @@ import { User } from '../user';
 })
 export class ArticleDetailComponent implements OnInit {
 
-  public status: User = {
+  private _status: User = {
     ID: 0,
     UserName: 'Guset',
-    UserStatus: 0
+    UserStatus: 0,
+    exp: 0,
+    iat: 0
   };
 
-  public time : string = '';
+  public get status(): User {
+    return this._status;
+  }
 
-  // flag: boolean =false;
-  // userID: number = 0;
-  // userName: string = 'Guset';
-  
+  private set status(status: User) {
+    this._status = status;
+  }
+
+  private _time: string = '';
+
+  public get time(): string {
+    return this._time;
+  }
+
+  private set time(time: string) {
+    this._time = time;
+  }
 
   @Input() _article: Article = {
     ID: 0,
@@ -57,31 +70,22 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   private getUserStatus(): void {
-    let status = this.articleService.getUserStatus();
-    console.log(status);
-    this.status = status;
+    this.articleService.getUserStatus()
+      .subscribe(status => {
+        this.status = status;
+      });
   }
 
   private getArticle(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.articleService.getArticle(id)
       .subscribe(article => {
-          this.article = article.Data;
-          console.log('A', this.article);
-          // this.time = JSON.stringify(article.Data.CreateDatetime).substr(1,19).replace('T',' ');
-          // console.log(this.time);
-          // let Ntime = Date.parse(this.time);
-          // console.log(Ntime);
-          // let Ctime = new Date(Ntime).toLocaleString();
-          // console.log(Ctime);
-
-          this.time = new Date(Date.parse(JSON.stringify(article.Data.UpdateDatetime).substr(1,19).replace('T',' '))).toLocaleString();
-
+        this.article = article.Data;
+        this.time = new Date(Date.parse(JSON.stringify(article.Data.UpdateDatetime).substr(1, 19).replace('T', ' '))).toLocaleString();
       });
   }
 
   public goBack(): void {
-
     this.location.back();
   }
 

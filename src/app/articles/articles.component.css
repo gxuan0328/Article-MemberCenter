@@ -6,19 +6,17 @@ h1 {
     font-size: 50px;
 }
 .container {
-    width: 800px;
-    margin: 0 auto;
+    width: 64%;
+    margin:20px auto;
 }
 ul {
     list-style-type: none;
     padding: 0px;
-    width: 99%;
     margin: 0 auto;
 }
 li {
     text-align: left;
     border-radius: 4px;
-    position: relative;
     cursor: pointer;
 }
 
@@ -26,7 +24,6 @@ li:hover {
     left: .1em;
 }
 a {
-    
     background-color: 	rgba(172, 221, 236, 0.945);
     text-decoration:none;
     display: block;
@@ -43,7 +40,7 @@ a:active {
 }
 .name {
     position:absolute;
-    right: 25px;
+    right: 30px;
     display: inline-block;
     
 }
@@ -53,67 +50,25 @@ a:active {
     overflow : hidden;
     text-overflow : ellipsis;
     white-space : nowrap;
-    width : 75%;
+    width : 85%;
 }
 h2 {
     display: inline-block;
-    position: absolute;
-    left: 0px;
 }
-
-/* button {
-    position: absolute;
-    left: 720px;
-    background-color: #E0E0E0;
-    margin: 20px;
-    border-radius: 4px;
-    border-style: hidden;
-    width: 70px;
-    height:25px;
-}
-button:hover {
-    background-color: #D0D0D0;
-}
-button:active {
-    background-color: #525252;
-    color: #fafafa;
-} */
 .box {
-    position: absolute;
-    display:  block;
-    width: 800px;
+    height: 65px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 .pagination {
     text-align: center;
-    margin-right: 80px;
-    padding-bottom: 10px;
-}
-mat-tab-group{
-    width: 800px;
+    padding: 1px;
 }
 app-article-search {
     display: inline-block;
-    position: relative;
-    left: 595px;
     z-index: 1000;
 }
-.tab-list {
-    position: relative;
-    top: 80px;
-}
-.login {
-    display: inline;
-    left: 120px;
-}
-.member{
-    width: 200px;
-    height: 50px;
-    position: relative;
-    left:600px;
-    top:10px
-}
-.hello {
-    display: inline;
-    position: relative;
-    top: 22px;
-}
+::ng-deep .ngx-pagination {
+    padding-left: 0px !important;
+  }

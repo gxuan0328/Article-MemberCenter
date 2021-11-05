@@ -13,23 +13,35 @@ import { User } from '../user';
 })
 export class ArticleEditComponent implements OnInit {
 
-  public status: User = {
+  private _status: User = {
     ID: 0,
     UserName: 'Guset',
-    UserStatus: 0
+    UserStatus: 0,
+    exp: 0,
+    iat: 0
   };
 
+  public get status(): User {
+    return this._status;
+  }
 
+  private set status(status: User) {
+    this._status = status;
+  }
 
-  // flag: boolean =false;
-  // userID: number = 0;
-  // userName: string = 'Guset';
-
-  public form:FormGroup = new FormGroup({
+  private _form: FormGroup = new FormGroup({
     Title: new FormControl(null, [Validators.required, Validators.minLength(3)]),
-    Author: new FormControl({value:this.status.UserName, disabled: true}, [Validators.required, Validators.minLength(3)] ),
+    Author: new FormControl({ value: this.status.UserName, disabled: true }, [Validators.required, Validators.minLength(3)]),
     Content: new FormControl(null, [Validators.required, Validators.minLength(3)]),
   });
+
+  public get form(): FormGroup {
+    return this._form;
+  }
+
+  private set form(form: FormGroup) {
+    this._form = form;
+  }
 
   private _article: Article = {
     ID: 0,
@@ -49,8 +61,6 @@ export class ArticleEditComponent implements OnInit {
     this._article = article;
   }
 
-
-
   constructor(
     private route: ActivatedRoute,
     private articleService: ArticleService,
@@ -61,13 +71,12 @@ export class ArticleEditComponent implements OnInit {
   public ngOnInit(): void {
     this.getArticle();
     this.getUserStatus();
-    if(this.status.UserStatus === 0){
+    if (this.status.UserStatus === 0) {
       this.router.navigate(['login']);
     }
   }
 
-
-  private replaceAll(string: string, search: string, replace:string) {
+  private replaceAll(string: string, search: string, replace: string) {
     return string.split(search).join(replace);
   }
 
@@ -76,7 +85,7 @@ export class ArticleEditComponent implements OnInit {
     this.articleService.getArticle(id)
       .subscribe(article => {
         this.article = article.Data;
-        this.form.setValue({Title:this.article.Title, Author:this.article.Author, Content:this.article.Content});
+        this.form.setValue({ Title: this.article.Title, Author: this.article.Author, Content: this.article.Content });
       });
   }
 
@@ -85,10 +94,12 @@ export class ArticleEditComponent implements OnInit {
   }
 
   public save(): void {
-    this.article.Content = this.replaceAll(this.article.Content,'\'','\'\'');
+    this.article.Content = this.replaceAll(this.article.Content, '\'', '\'\'');
     if (this.article) {
+      this.article.Title = this.form.get('Title')?.value.trim();
+      this.article.Content = this.form.get('Content')?.value.trim();
       const id = Number(this.route.snapshot.paramMap.get('id'));
-      this.articleService.updateArticle(this.article,id)
+      this.articleService.updateArticle(this.article, id)
         .subscribe(() => {
           alert('Success update an article');
           this.goBack();
@@ -97,11 +108,9 @@ export class ArticleEditComponent implements OnInit {
   }
 
   private getUserStatus(): void {
-    let status = this.articleService.getUserStatus();
-    console.log(status);
-    this.status = status;
+    this.articleService.getUserStatus()
+      .subscribe(status => {
+        this.status = status;
+      });
   }
-
-
-
 }

@@ -1,8 +1,9 @@
 <div>
-    <!-- <input #searchBox (input)="search(searchBox.value)" placeholder="search article title"/> -->
     <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label><mat-icon>search</mat-icon></mat-label>
-        <input matInput #searchBox (input)="search(searchBox.value)" placeholder="search article title">
+        <mat-label>
+            <mat-icon>search</mat-icon> search article title
+        </mat-label>
+        <input matInput #searchBox (input)="search(searchBox.value)" >
     </mat-form-field>
     <ul class="search-result">
         <li *ngFor="let article of articles$ | async">
@@ -10,7 +11,3 @@
         </li>
     </ul>
 </div>
-<!-- <mat-form-field class="example-full-width" appearance="outline">
-    <mat-label><mat-icon>search</mat-icon></mat-label>
-    <input matInput #searchBox (input)="search(searchBox.value)" placeholder="search article title">
-</mat-form-field> -->

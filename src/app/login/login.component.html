@@ -1,9 +1,6 @@
-<app-toolbar></app-toolbar>
 <div class="container">
   <div class="loginbox">
     <h1>LOGIN</h1>
-
-
     <form [formGroup]="form">
       <mat-form-field appearance="fill">
         <mat-label>UserName</mat-label>
@@ -14,23 +11,12 @@
         <input matInput formControlName="Password" type="password"> 
       </mat-form-field>
       <br>
-      <!-- <div>
-        <label>UserName:</label>
-        <input formControlName="UserName" type="text" placeholder="UserName"><br>
-        <small *ngIf="form.get('UserName')?.invalid && form.get('UserName')?.touched">UserName is Require </small>
-      </div>
-      <div>
-        <label>Password:</label>
-        <input formControlName="Password" type="text" placeholder="Password"><br>
-        <small *ngIf="form.get('Password')?.invalid && form.get('Password')?.touched">Password is Require</small>
-      </div> -->
-      <button mat-raised-button color="basic" routerLink="/signin">
+      <button mat-raised-button matTooltip="sign in" color="basic" routerLink="/signin">
         <mat-icon>person_add</mat-icon>
       </button>
-      <button [disabled]="form.invalid" (click)="Login()" mat-raised-button color="primary">
+      <button [disabled]="form.invalid" (click)="login()" mat-raised-button matTooltip="login" color="primary">
         <mat-icon>login</mat-icon>
       </button>
     </form>
   </div>
-  
 </div>

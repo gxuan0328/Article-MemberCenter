@@ -1,26 +1,22 @@
-<app-toolbar></app-toolbar>
 <form [formGroup]="form">
-    <div class="header" >
+    <div class="header">
         <h1>[ CREATE MODE ]</h1>
     </div>
     <div class="detail">
-        <textarea formControlName="Title" class="title" type="text" placeholder="Article Title" [class.invalid]="form.get('Title')?.touched&&form.get('Title')?.invalid"></textarea>
+        <textarea formControlName="Title" class="title" type="text" placeholder="Article Title"
+            [class.invalid]="form.get('Title')?.touched&&form.get('Title')?.invalid"></textarea>
         <input formControlName="Author" class="author" type="text">
     </div>
     <div class="content">
-        <textarea formControlName="Content" class="textbox" placeholder="Content..." [class.invalid]="form.get('Content')?.touched&&form.get('Content')?.invalid"></textarea>
+        <textarea formControlName="Content" class="textbox" placeholder="Content..."
+            [class.invalid]="form.get('Content')?.touched&&form.get('Content')?.invalid"></textarea>
     </div>
-    
-    
     <div class="footer">
-        <button mat-raised-button color="primary" (click)="goBack()">
+        <button mat-raised-button matTooltip="back" color="primary" (click)="goBack()">
             <mat-icon>reply</mat-icon>
         </button>
-        <button mat-raised-button  [disabled]="form.invalid" (click)="add()">
+        <button mat-raised-button matTooltip="add" color="primary" [disabled]="form.invalid" (click)="add()">
             <mat-icon>done</mat-icon>
         </button>
-
     </div>
-    
 </form>
-

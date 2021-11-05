@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 import { Article } from '../article';
 import { ArticleService } from '../article.service';
 @Component({
@@ -17,7 +17,7 @@ export class ArticleSearchComponent implements OnInit {
     return this._articles$;
   }
 
-  private set articles$(article: Observable<Article[]>){
+  private set articles$(article: Observable<Article[]>) {
     this._articles$ = article;
   }
 
@@ -27,14 +27,19 @@ export class ArticleSearchComponent implements OnInit {
     this.articles$ = this.searchTerm.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap((term: string) => this.articleService.searchArticle(term))
+      switchMap((term: string) => this.articleService.searchArticle(term).pipe(
+        map(val => val.Data))
+      )
     );
   }
 
-  public search(term: string): void{
-    this.searchTerm.next(term);
+  public search(term: string): void {
+    if (!term.trim()) {
+      console.log('no string');
+    }
+    else {
+      this.searchTerm.next(term);
+    }
+
   }
-
-
-
 }
