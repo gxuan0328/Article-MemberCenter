@@ -1,45 +1,37 @@
 div {
-    text-align: right;
+  text-align: right;
 }
-/* input {
-    margin-top: 15px;
-    padding: .5rem;
-    width: 100%;
-    max-width: 200px;
-    box-sizing: border-box;
-    border-radius: 8px;
-  }
-  
-  input:focus {
-    outline: #336699 auto 1px;
-  } */
-  
-  li {
-    list-style-type: none;
-    background-color:white;
-  }
-  .search-result li a {
-    border-bottom: 1px solid gray;
-    /* border-left: 1px solid gray;
-    border-right: 1px solid gray; */
-    display: inline-block;
-    width: 100%;
-    max-width: 200px;
-    padding: .5rem;
-    box-sizing: border-box;
-    text-decoration: none;
-    color: black;
-  }
-  
-  .search-result li a:hover {
-    background-color: #435A60;
-    color: white;
-  }
-  
-  ul.search-result {
-    text-align: center;
-    position: relative;
-    top:-22px;
-    margin: 0;
-    padding: 0;
-  }
+li {
+  list-style-type: none;
+  background-color: white;
+}
+a {
+  text-decoration: none;
+}
+
+ul.search-result {
+  text-align: center;
+  position: relative;
+  top: -22px;
+  margin: 0;
+  padding: 0;
+}
+mat-card {
+  background-color: #d8d8d886;
+  padding: 16px 8px;
+  border-radius: 0px;
+}
+mat-card:hover {
+    background-color: #c9c9c98e;
+    
+}
+mat-card:active {
+    background: #3f51b526;
+    color: #3f51b5;
+}
+mat-card-subtitle {
+  text-align: left;
+}
+button {
+  top:-7px;
+}

@@ -16,7 +16,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ArticleSearchComponent } from './article-search/article-search.component';
 import { LoginComponent } from './login/login.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
@@ -24,6 +24,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { SignComponent } from './sign/sign.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { PermissionGuard } from './guard/permission.guard';
+import { GuestGuard } from './guard/guest.guard';
+import { AddExitGuard, EditExitGuard } from './guard/confirm.guard';
+import { PersonalComponent } from './personal/personal.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -39,7 +50,8 @@ export function tokenGetter() {
     ArticleSearchComponent,
     LoginComponent,
     ToolbarComponent,
-    SignComponent
+    SignComponent,
+    PersonalComponent
   ],
   imports: [
     BrowserModule,
@@ -62,8 +74,22 @@ export function tokenGetter() {
       },
     }),
     MatTooltipModule,
+    MatExpansionModule,
+    MatMenuModule,
+    FormsModule,
+    MatDividerModule,
+    MatSnackBarModule,
+    MatPaginatorModule,
+    MatDatepickerModule, 
+    MatNativeDateModule, 
+
   ],
-  providers: [],
+  providers: [
+    PermissionGuard,
+    GuestGuard,
+    AddExitGuard,
+    EditExitGuard,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

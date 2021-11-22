@@ -1,17 +1,28 @@
 <mat-toolbar color="primary">
-    <a routerLink="/articles"><span>Article List</span></a>
+    <a routerLink="/articles"><span>Google 新聞</span></a>
     <span class="example-spacer"></span>
-    <button *ngIf="!status.UserStatus else LOGIN" mat-raised-button matTooltip="login" color="primary" routerLink="/login">
+    <button *ngIf="!status.UserStatus else LOGIN" mat-raised-button matTooltip="登入" color="primary" routerLink="/login">
         <span>LOGIN</span>
         <mat-icon>account_circle</mat-icon>
     </button>
     <ng-template #LOGIN>
-        <button mat-raised-button matTooltip="add" color="primary" routerLink="/articles/add" [disabled]="!status.UserStatus">
+        <button mat-raised-button matTooltip="新增文章" color="primary" routerLink="/articles/add"
+            [disabled]="!status.UserStatus">
             <mat-icon>add</mat-icon>
         </button>
-        <button mat-raised-button matTooltip="logout" color="primary" (click)="logout()">
+        <button mat-raised-button color="primary" [matMenuTriggerFor]="menu">
             <span>Hi, {{status.UserName}}</span>
             <mat-icon>account_circle</mat-icon>
         </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item class="item" routerLink="/personal">
+                <span>個人頁面</span>
+                <mat-icon>article</mat-icon>
+            </button>
+            <button mat-menu-item class="item" (click)="logout()">
+                <span>帳號登出</span>
+                <mat-icon>logout</mat-icon>
+            </button>
+        </mat-menu>
     </ng-template>
 </mat-toolbar>

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ArticleService } from '../article.service';
-import { Article } from '../article';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { User } from '../user';
+import { User } from '../interface/user';
+import { newArticle } from '../interface/newArticle';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-article-add',
@@ -13,9 +14,19 @@ import { User } from '../user';
 })
 export class ArticleAddComponent implements OnInit {
 
+  private _submit: boolean = false;
+
+  public get submit(): boolean {
+    return this._submit;
+  }
+
+  private set submit(submit: boolean) {
+    this._submit = submit;
+  }
+
   private _status: User = {
-    ID: 0,
-    UserName: 'Guset',
+    Id: 0,
+    UserName: '',
     UserStatus: 0,
     exp: 0,
     iat: 0
@@ -32,7 +43,7 @@ export class ArticleAddComponent implements OnInit {
   private _form: FormGroup = new FormGroup({
     Title: new FormControl(null, [Validators.required, Validators.minLength(3)]),
     Author: new FormControl({ value: this.status.UserName, disabled: true }, [Validators.required, Validators.minLength(3)]),
-    Content: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+    Content: new FormControl(null, [Validators.required, Validators.minLength(20)]),
   });
 
   public get form(): FormGroup {
@@ -43,17 +54,27 @@ export class ArticleAddComponent implements OnInit {
     this._form = form;
   }
 
+  public get Title(): FormControl {
+    return this.form.get('Title') as FormControl;
+  }
+
+  public get Content(): FormControl {
+    return this.form.get('Content') as FormControl;
+  }
+
   constructor(
     private articleService: ArticleService,
     private location: Location,
     private router: Router,
+    private snackBar: MatSnackBar,
   ) { }
 
   public ngOnInit(): void {
     this.getUserStatus();
-    if (this.status.UserStatus === 0) {
-      this.router.navigate(['login']);
-    }
+  }
+
+  private replaceAll(string: string, search: string, replace: string) {
+    return string.split(search).join(replace);
   }
 
   public goBack(): void {
@@ -61,13 +82,17 @@ export class ArticleAddComponent implements OnInit {
   }
 
   public add(): void {
-    let title = this.form.get('Title')?.value.trim();
-    let author = this.form.get('Author')?.value.trim();
-    let textbox = this.form.get('Content')?.value.trim();
+    this.submit = true;
+    
+    const newArticle: newArticle =  {
+      Title: this.form.get('Title')?.value.trim(),
+      User_Id: this.status.Id,
+      Content: this.replaceAll(this.form.get('Content')?.value.trim(), '\'', '\'\'')
+    };  
 
-    this.articleService.addArticle({ Title: title, User_ID: this.status.ID, Author: author, Content: textbox } as Article)
-      .subscribe(article => {
-        alert('Success add an article');
+    this.articleService.addArticle(newArticle)
+      .subscribe(() => {
+        this.snackBar.open('新增文章成功', 'OK', { horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000 });
         this.router.navigate(['articles']);
       });
   }
@@ -78,6 +103,5 @@ export class ArticleAddComponent implements OnInit {
         this.status = status;
         this.form.setValue({ Title: null, Author: this.status.UserName, Content: null });
       });
-
   }
 }

@@ -1,24 +1,33 @@
-<div *ngIf="article">
-    <form [formGroup]="form">
-        <div class="header">
-            <h1>[ EDIT MODE ]</h1>
-        </div>
-        <div class="detail">
-            <textarea formControlName="Title" class="title" type="text" placeholder="Article Title"
-                [class.invalid]="form.get('Title')?.touched&&form.get('Title')?.invalid"></textarea>
-            <input formControlName="Author" class="author" type="text" value={{status.UserName}}>
-        </div>
-        <div class="content">
-            <textarea formControlName="Content" class="textbox" type="text" placeholder="Content..."
-                [class.invalid]="form.get('Content')?.touched&&form.get('Content')?.invalid"></textarea>
-        </div>
-        <div class="footer">
-            <button mat-raised-button matTooltip="back" color="primary" (click)="goBack()">
-                <mat-icon>reply</mat-icon>
-            </button>
-            <button mat-raised-button matTooltip="save" color="primary" [disabled]="form.invalid" (click)="save()">
-                <mat-icon>done</mat-icon>
-            </button>
-        </div>
-    </form>
+<div class="container">
+    <mat-card>
+        <form [formGroup]="form">
+            <mat-card-title-group>
+                <mat-card-title>
+                    <mat-form-field class="no-wrapper" appearance="outline">
+                        <mat-label>文章標題</mat-label>
+                        <textarea matInput formControlName="Title" class="title" type="text"
+                            [class.invalid]="Title.touched&&Title.invalid"></textarea>
+                        <mat-error>at least 3 letter </mat-error>
+                    </mat-form-field>
+                </mat-card-title>
+            </mat-card-title-group>
+            <mat-card-content>
+                <mat-form-field class="no-wrapper" appearance="outline">
+                    <mat-label>文章內容</mat-label>
+                    <textarea matInput formControlName="Content" class="content" type="text"
+                        [class.invalid]="Content.touched&&Content.invalid"></textarea>
+                    <mat-error>at least 20 letter </mat-error>
+                </mat-form-field>
+            </mat-card-content>
+            <mat-divider></mat-divider>
+            <mat-card-actions>
+                <button mat-raised-button matTooltip="返回" color="primary" (click)="goBack()">
+                    <mat-icon>reply</mat-icon>
+                </button>
+                <button mat-raised-button matTooltip="提交" color="primary" [disabled]="form.invalid" (click)="save()">
+                    <mat-icon>done</mat-icon>
+                </button>
+            </mat-card-actions>
+        </form>
+    </mat-card>
 </div>

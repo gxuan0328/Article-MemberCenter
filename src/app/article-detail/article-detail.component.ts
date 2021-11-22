@@ -2,8 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ArticleService } from '../article.service';
-import { Article } from '../article';
-import { User } from '../user';
+import { Article } from '../interface/article';
+import { User } from '../interface/user';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-article-detail',
@@ -13,8 +14,8 @@ import { User } from '../user';
 export class ArticleDetailComponent implements OnInit {
 
   private _status: User = {
-    ID: 0,
-    UserName: 'Guset',
+    Id: 0,
+    UserName: '',
     UserStatus: 0,
     exp: 0,
     iat: 0
@@ -39,10 +40,10 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   @Input() _article: Article = {
-    ID: 0,
+    Id: 0,
     Title: '',
-    User_ID: 0,
-    Author: '',
+    User_Id: 0,
+    UserName: '',
     Content: '',
     CreateDatetime: '',
     UpdateDatetime: '',
@@ -61,12 +62,12 @@ export class ArticleDetailComponent implements OnInit {
     private articleService: ArticleService,
     private location: Location,
     private router: Router,
+    private snackBar: MatSnackBar,
   ) { }
 
   public ngOnInit(): void {
     this.getArticle();
     this.getUserStatus();
-
   }
 
   private getUserStatus(): void {
@@ -81,7 +82,7 @@ export class ArticleDetailComponent implements OnInit {
     this.articleService.getArticle(id)
       .subscribe(article => {
         this.article = article.Data;
-        this.time = new Date(Date.parse(JSON.stringify(article.Data.UpdateDatetime).substr(1, 19).replace('T', ' '))).toLocaleString();
+        this.time = new Date(Date.parse(JSON.stringify(article.Data.CreateDatetime).substr(1, 19).replace('T', ' '))).toLocaleString();
       });
   }
 
@@ -93,10 +94,10 @@ export class ArticleDetailComponent implements OnInit {
     if (confirm('Are you sure to delete this record?')) {
       const id = Number(this.route.snapshot.paramMap.get('id'));
       this.articleService.deleteArticle(id)
-        .subscribe(() => this.router.navigate(['articles']));
+        .subscribe(() => {
+          this.snackBar.open('刪除文章成功', 'OK', { horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000 });
+          this.location.back();
+        });
     }
   }
-
-
-
 }

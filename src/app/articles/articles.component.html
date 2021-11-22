@@ -1,65 +1,64 @@
-<div class="container"> 
+<div class="container">
     <div class="box">
-        <h2>NEWS</h2>
-        <app-article-search></app-article-search>   
-
+        <h2>最新消息</h2>
+        <span class="example-spacer"></span>
+        <app-article-search></app-article-search>
+        <button mat-icon-button matTooltip="進階搜尋" class="more" (click)="togglePanel()">
+            <mat-icon *ngIf="!panelOpenState else open">expand_more</mat-icon>
+            <ng-template #open>
+                <mat-icon>expand_less</mat-icon>
+            </ng-template>
+        </button>
     </div>
-    <div class="tab-list">
-        <mat-tab-group animationDuration="0ms">
-            <mat-tab label="Sports">
-                <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: page}" >
-            
-                            <a routerLink="/detail/{{article.ID}}" >
-                                <h3 class="title">{{article.Title}}</h3> <span class="name">{{article.Author}}</span>
-                            </a>
-                    </li>
-                </ul>
-            </mat-tab>
-            <mat-tab label="Business">
-                <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: page}">
-            
-                            <a routerLink="/detail/{{article.ID}}">
-                                <h3 class="title">{{article.Title}}</h3> <span class="name">{{article.Author}}</span>
-                            </a>
-                    </li>
-                </ul>
-            </mat-tab>
-            <mat-tab label="World">
-                <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: page}">
-            
-                            <a routerLink="/detail/{{article.ID}}">
-                                <h3 class="title">{{article.Title}}</h3> <span class="name">{{article.Author}}</span>
-                            </a>
-                    </li>
-                </ul>
-            </mat-tab>
-            <mat-tab label="Life">
-                <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: page}">
-            
-                            <a routerLink="/detail/{{article.ID}}">
-                                <h3 class="title">{{article.Title}}</h3> <span class="name">{{article.Author}}</span>
-                            </a>
-                    </li>
-                </ul>
-            </mat-tab>
-            <mat-tab label="Education">
-                <ul>
-                    <li *ngFor="let article of articles | paginate:{itemsPerPage: 4, currentPage: page}">
-            
-                            <a routerLink="/detail/{{article.ID}}">
-                                <h3 class="title">{{article.Title}}</h3> <span class="name">{{article.Author}}</span>
-                            </a>
-                    </li>
-                </ul>
-            </mat-tab>
+    <mat-expansion-panel *ngIf="panelOpenState" [expanded]="true" hideToggle>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                進階搜尋
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <form [formGroup]="form">
+            <mat-panel-description>
+                <mat-form-field appearance="fill">
+                    <mat-label>新聞標題</mat-label>
+                    <input matInput formControlName="Title">
+                </mat-form-field>
 
-        </mat-tab-group>
+                <mat-form-field appearance="fill">
+                    <mat-label>作者名稱</mat-label>
+                    <input matInput formControlName="Author">
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>查詢日期</mat-label>
+                    <mat-date-range-input [rangePicker]="picker">
+                        <input matStartDate formControlName="FromDate" placeholder="開始日期">
+                        <input matEndDate formControlName="ToDate" placeholder="結束日期">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+            </mat-panel-description>
+        </form>
+
+        <mat-action-row>
+            <button mat-button color="primary" (click)="search()">搜尋</button>
+        </mat-action-row>
+    </mat-expansion-panel>
+    <div class="tab-list">
+        <ul>
+            <li *ngFor="let article of articles">
+                <a routerLink="/detail/{{article.Id}}">
+                    <mat-card>
+                        <mat-card-title>{{article.Title}}</mat-card-title>
+                        <mat-card-subtitle>{{article.CreateDatetime | date: 'medium' }}</mat-card-subtitle>
+                    </mat-card>
+                </a>
+
+            </li>
+        </ul>
         <div class="pagination">
-            <pagination-controls (pageChange)="page = $event" ></pagination-controls>
+            <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                (page)="nextPage($event)"></mat-paginator>
         </div>
-    </div>   
+    </div>
 </div>

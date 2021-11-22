@@ -1,25 +1,30 @@
-<div *ngIf="article">
-    <div class="header">
-        <h1>{{article.Title | uppercase}}</h1>
-        <h3>{{article.Author | uppercase}}</h3>
-        <div class="time">
-            <span>{{time}}</span>
+<div class="container">
+    <mat-card>
+        <div  class="options">
+            <button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="!(status.Id===article.User_Id) && !(status.UserStatus===2)">
+                <mat-icon>expand_more</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item class="item" (click)="delete()">
+                    刪除文章
+                </button>
+                <button mat-menu-item class="item" routerLink="/detail/{{article.Id}}/edit">
+                    編輯文章
+                </button>
+            </mat-menu>
         </div>
-    </div>
-    <div class="content">
-        <p>{{article.Content}}</p>
-    </div>
-    <div class="footer">
-        <button mat-raised-button matTooltip="back" color="primary" (click)="goBack()">
-            <mat-icon>reply</mat-icon>
-        </button>
-        <button *ngIf="status.ID===article.User_ID || status.UserStatus===2" (click)="delete()" mat-raised-button
-        matTooltip="delete" color="warn">
-            <mat-icon>delete</mat-icon>
-        </button>
-        <button *ngIf="status.ID===article.User_ID || status.UserStatus===2" routerLink="/detail/{{article.ID}}/edit"
-            mat-raised-button matTooltip="edit" color="primary">
-            <mat-icon>edit</mat-icon>
-        </button>
-    </div>
+        <mat-card-title-group>
+            <mat-card-title>{{article.Title}}</mat-card-title>
+            <mat-card-subtitle>{{article.UserName}}<span> ． {{time}}</span></mat-card-subtitle>
+        </mat-card-title-group>
+        <mat-card-content>
+            {{article.Content}}
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-actions>
+            <button mat-raised-button matTooltip="返回" color="primary" (click)="goBack()">
+                <mat-icon>reply</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
 </div>

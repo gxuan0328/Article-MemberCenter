@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ArticleService } from '../article.service';
-import { User } from '../user';
+import { User } from '../interface/user';
 
 @Component({
   selector: 'app-toolbar',
@@ -11,8 +12,8 @@ import { User } from '../user';
 export class ToolbarComponent implements OnInit {
 
   private _status: User = {
-    ID: 0,
-    UserName: 'Guset',
+    Id: 0,
+    UserName: '',
     UserStatus: 0,
     exp: 0,
     iat: 0
@@ -29,6 +30,7 @@ export class ToolbarComponent implements OnInit {
   constructor(
     private articleService: ArticleService,
     private router: Router,
+    private snackBar: MatSnackBar,
     ) { }
 
   public ngOnInit(): void {
@@ -43,9 +45,10 @@ export class ToolbarComponent implements OnInit {
   }
 
   public logout(): void {
-    if (confirm('Are you sure to logout?')) {
+    if (confirm('確定要登出帳號嗎?')) {
       this.articleService.logout();
       this.getUserStatus();
+      this.snackBar.open('登出成功', 'OK', { horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000 });
       this.router.navigate(['articles']);
     }
   }

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ArticleService } from '../article.service';
-import { Article } from '../article';
+import { Article } from '../interface/article';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { User } from '../user';
+import { User } from '../interface/user';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-article-edit',
@@ -13,9 +14,19 @@ import { User } from '../user';
 })
 export class ArticleEditComponent implements OnInit {
 
+  private _submit: boolean = false;
+
+  public get submit(): boolean {
+    return this._submit;
+  }
+
+  private set submit(submit: boolean) {
+    this._submit = submit;
+  }
+
   private _status: User = {
-    ID: 0,
-    UserName: 'Guset',
+    Id: 0,
+    UserName: '',
     UserStatus: 0,
     exp: 0,
     iat: 0
@@ -32,7 +43,7 @@ export class ArticleEditComponent implements OnInit {
   private _form: FormGroup = new FormGroup({
     Title: new FormControl(null, [Validators.required, Validators.minLength(3)]),
     Author: new FormControl({ value: this.status.UserName, disabled: true }, [Validators.required, Validators.minLength(3)]),
-    Content: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+    Content: new FormControl(null, [Validators.required, Validators.minLength(20)]),
   });
 
   public get form(): FormGroup {
@@ -44,10 +55,10 @@ export class ArticleEditComponent implements OnInit {
   }
 
   private _article: Article = {
-    ID: 0,
+    Id: 0,
     Title: '',
-    User_ID: 0,
-    Author: '',
+    User_Id: 0,
+    UserName: '',
     Content: '',
     CreateDatetime: '',
     UpdateDatetime: '',
@@ -61,19 +72,25 @@ export class ArticleEditComponent implements OnInit {
     this._article = article;
   }
 
+  public get Title(): FormControl {
+    return this.form.get('Title') as FormControl;
+  }
+
+  public get Content(): FormControl {
+    return this.form.get('Content') as FormControl;
+  }
+
   constructor(
     private route: ActivatedRoute,
     private articleService: ArticleService,
     private location: Location,
     private router: Router,
+    private snackBar: MatSnackBar,
   ) { }
 
   public ngOnInit(): void {
     this.getArticle();
     this.getUserStatus();
-    if (this.status.UserStatus === 0) {
-      this.router.navigate(['login']);
-    }
   }
 
   private replaceAll(string: string, search: string, replace: string) {
@@ -85,7 +102,7 @@ export class ArticleEditComponent implements OnInit {
     this.articleService.getArticle(id)
       .subscribe(article => {
         this.article = article.Data;
-        this.form.setValue({ Title: this.article.Title, Author: this.article.Author, Content: this.article.Content });
+        this.form.setValue({ Title: this.article.Title, Author: this.article.UserName, Content: this.article.Content });
       });
   }
 
@@ -94,17 +111,15 @@ export class ArticleEditComponent implements OnInit {
   }
 
   public save(): void {
-    this.article.Content = this.replaceAll(this.article.Content, '\'', '\'\'');
-    if (this.article) {
-      this.article.Title = this.form.get('Title')?.value.trim();
-      this.article.Content = this.form.get('Content')?.value.trim();
-      const id = Number(this.route.snapshot.paramMap.get('id'));
-      this.articleService.updateArticle(this.article, id)
-        .subscribe(() => {
-          alert('Success update an article');
-          this.goBack();
-        });
-    }
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.submit = true;
+    this.article.Title = this.form.get('Title')?.value.trim();
+    this.article.Content = this.replaceAll(this.form.get('Content')?.value.trim(), '\'', '\'\'');
+    this.articleService.updateArticle(this.article, id)
+      .subscribe(() => {
+        this.snackBar.open('更新文章成功', 'OK', { horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000 });
+        this.location.back();
+      });
   }
 
   private getUserStatus(): void {

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { ArticleService } from '../article.service';
 import { Location } from '@angular/common';
-import { User } from '../user';
+import { User } from '../interface/user';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-login',
@@ -14,8 +14,8 @@ import { User } from '../user';
 export class LoginComponent implements OnInit {
 
     private _status: User = {
-        ID: 0,
-        UserName: 'Guset',
+        Id: 0,
+        UserName: '',
         UserStatus: 0,
         exp: 0,
         iat: 0
@@ -45,15 +45,12 @@ export class LoginComponent implements OnInit {
     constructor(
         private articleService: ArticleService,
         private router: Router,
-        private jwt: JwtHelperService,
         private location: Location,
+        private snackBar: MatSnackBar,
     ) { }
 
     public ngOnInit() {
         this.getUserStatus();
-        if(this.status.UserStatus !== 0){
-            this.goBack();
-        }
     }
 
     public goBack(): void {
@@ -62,9 +59,8 @@ export class LoginComponent implements OnInit {
 
     public login(): void {
         this.articleService.userLogin(this.form.get('UserName')?.value, this.form.get('Password')?.value).
-            subscribe((user) => {
-                alert(user.Message);
-                console.log(user.Data);
+            subscribe(() => {
+                this.snackBar.open('登入成功', 'OK', { horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000});
                 this.router.navigate(['articles']);
             });
     }

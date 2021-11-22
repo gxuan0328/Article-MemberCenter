@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, filter, map, tap } from 'rxjs/operators';
-import { Article } from './article';
-import { Response } from './response';
-import { User } from './user';
+import { Article } from './interface/article';
+import { Response } from './interface/response';
+import { User } from './interface/user';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
+import { Articles } from './interface/articles';
+import { newArticle } from './interface/newArticle';
+import { Search } from './interface/search';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +23,8 @@ export class ArticleService {
   };
 
   private _status: User = {
-    ID: 0,
-    UserName: 'Guset',
+    Id: 0,
+    UserName: '',
     UserStatus: 0,
     exp: 0,
     iat: 0
@@ -57,9 +60,9 @@ export class ArticleService {
   }
 
   public logout(): void {
-    let guest = {
-      ID: 0,
-      UserName: 'Guset',
+    const guest = {
+      Id: 0,
+      UserName: '',
       UserStatus: 0,
       exp: 0,
       iat: 0
@@ -72,8 +75,13 @@ export class ArticleService {
     return this.userStatus;
   }
 
-  public getArticles(): Observable<Response<Article[]>> {
-    return this.http.get<Response<Article[]>>(this.articlesUrl)
+  public setAuthorization(token: string): void {
+    this.httpOptions.headers = this.httpOptions.headers.set('Authorization', token);
+  }
+
+
+  public getArticles(): Observable<Response<Articles[]>> {
+    return this.http.get<Response<Articles[]>>(this.articlesUrl)
       .pipe(
         tap(_ => console.log('fetch all article')),
         filter(article => {
@@ -81,12 +89,70 @@ export class ArticleService {
             return true;
           }
           else {
-            console.log(article.Message);
             alert('system error');
             return false;
           }
         }),
-        catchError(this.handleError<Response<Article[]>>('getArticles', { StatusCode: 0, Message: 'failed update', Data: [] }))
+        catchError(this.handleError<Response<Articles[]>>('getArticles', { StatusCode: 0, Message: 'failed update', Data: [] }))
+      );
+  }
+
+  public getArticlesId(): Observable<Response<number[]>> {
+    return this.http.get<Response<number[]>>(`${this.articlesUrl}/articleId`)
+      .pipe(
+        tap(_ => console.log('fetch article id array')),
+        filter(article => {
+          if (article.StatusCode === 200) {
+            return true;
+          }
+          else {
+            alert('system error');
+            return false;
+          }
+        }),
+        catchError(this.handleError<Response<number[]>>('getArticles', { StatusCode: 0, Message: 'failed update', Data: [] }))
+      );
+  }
+
+  public getPersonalArticlesId(): Observable<Response<number[]>> {
+    return this.http.get<Response<number[]>>(`${this.articlesUrl}/personalArticleId`, this.httpOptions)
+      .pipe(
+        tap(_ => console.log('fetch personal article id array')),
+        filter(article => {
+          if (article.StatusCode === 200) {
+            return true;
+          }
+          else {
+            alert('system error');
+            return false;
+          }
+        }),
+        catchError(this.handleError<Response<number[]>>('getArticles', { StatusCode: 0, Message: 'failed update', Data: [] }))
+      );
+  }
+
+  public getArticleList(list: number[]): Observable<Response<Articles[]>> {
+    return this.http.get<Response<Articles[]>>(`${this.articlesUrl}/list`,{params:{list: list}})
+      .pipe(
+        tap(_ => console.log('fetch a part of articles')),
+        filter(article => {
+          if (article.StatusCode === 200) {
+            return true;
+          }
+          else if (article.StatusCode === 400) {
+            alert('don\'t have request article list');
+            return false;
+          }
+          else if (article.StatusCode === 404) {
+            alert('some request article was not found');
+            return false;
+          }
+          else {
+            alert('system error');
+            return false;
+          }
+        }),
+        catchError(this.handleError<Response<Articles[]>>('getArticles', { StatusCode: 0, Message: 'failed update', Data: [] }))
       );
   }
 
@@ -99,13 +165,11 @@ export class ArticleService {
           return true;
         }
         else if (article.StatusCode === 404) {
-          console.log(article.Message);
-          alert(article.Message);
+          alert('non-exist article');
           this.router.navigate(['articles']);
           return false;
         }
         else {
-          console.log(article.Message);
           alert('system error');
           this.router.navigate(['articles']);
           return false;
@@ -118,27 +182,38 @@ export class ArticleService {
   public updateArticle(article: Article, id: number): Observable<Response<Article>> {
     const url = `${this.articlesUrl}/detail/${id}`;
     return this.http.put<Response<Article>>(url, article, this.httpOptions).pipe(
-      tap(_ => console.log(`update article id=${article.ID}`)),
+      tap(_ => console.log(`update article id=${article.Id}`)),
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
         }
-        else if (article.StatusCode === 404) {
-          console.log(article.Message);
-          alert(article.Message);
+        else if (article.StatusCode === 400) {
+          alert('update failed, input value can\'t be null');
           return false;
         }
-        else if (article.StatusCode === 401 || article.StatusCode === 403) {
-          console.log(article.Message);
-          console.log(article);
-          alert(article.Message);
+        else if (article.StatusCode === 401) {
+          alert('token varify failed, please login again');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else if (article.StatusCode === 403) {
+          alert('don\'t have authority');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else if (article.StatusCode === 404) {
+          alert('update failed, cannot proccess the request');
+          return false;
+        }
+        else if (article.StatusCode === 412) {
+          alert('don\'t have token');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
         else {
-          console.log(article);
-          console.log(article.Message);
           alert('system error');
           return false;
         }
@@ -155,23 +230,30 @@ export class ArticleService {
         if (article.StatusCode === 200) {
           return true;
         }
+        else if (article.StatusCode === 401) {
+          alert('token varify failed, please login again');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else if (article.StatusCode === 403) {
+          alert('don\'t have authority');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
         else if (article.StatusCode === 404) {
-          console.log(article);
-          console.log(article.Message);
-          alert(article.Message);
+          alert('non-exist article');
           this.router.navigate(['articles']);
           return false;
         }
-        else if (article.StatusCode === 401 || article.StatusCode === 403) {
-          console.log(article.Message);
-          alert(article.Message);
+        else if (article.StatusCode === 412) {
+          alert('don\'t have token');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
         else {
-          console.log(article);
-          console.log(article.Message);
           alert('system error');
           return false;
         }
@@ -180,29 +262,36 @@ export class ArticleService {
     );
   }
 
-  public addArticle(article: Article): Observable<Response<Article>> {
-    return this.http.post<Response<Article>>(this.articlesUrl, article, this.httpOptions,).pipe(
+  public addArticle(article: newArticle): Observable<Response<Article>> {
+    return this.http.post<Response<Article>>(`${this.articlesUrl}/article`, article, this.httpOptions).pipe(
       tap(_ => console.log('success add a new article')),
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
         }
-        else if (article.StatusCode === 404) {
-          console.log(article);
-          console.log(article.Message);
-          alert(article.Message);
+        else if (article.StatusCode === 400) {
+          alert('create failed, input value can\'t be null');
           return false;
         }
-        else if (article.StatusCode === 401 || article.StatusCode === 403) {
-          console.log(article.Message);
-          alert(article.Message);
+        else if (article.StatusCode === 401) {
+          alert('token varify failed, please login again');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else if (article.StatusCode === 403) {
+          alert('don\'t have authority');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else if (article.StatusCode === 412) {
+          alert('don\'t have token');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
         else {
-          console.log(article.Message);
-          console.log(article);
           alert('system error');
           return false;
         }
@@ -211,33 +300,65 @@ export class ArticleService {
     );
   }
 
-  public searchArticle(term: string): Observable<Response<Article[]>> {
-    return this.http.get<Response<Article[]>>(`${this.articlesUrl}/search/${term}`).pipe(
-      tap(x => x.Data.length ? console.log(`found articles matching "${term}"`) : console.log(`no articles matching "${term}"`)),
+  public advanceSearch(value: Search): Observable<Response<number[]>> {
+    return this.http.get<Response<number[]>>(`${this.articlesUrl}/search`, { params: { title: value.Title, author: value.Author, fromDate: value.FromDate, toDate: value.ToDate}}).pipe(
+      tap(x => x.Data.length ? console.log(`found articles matching`) : console.log(`no articles matching`)),
+      filter(article => {
+        if (article.StatusCode === 200) {
+          return true;
+        }
+        else if (article.StatusCode === 400) {
+          alert('don\'t input any condition');
+          return false;
+        }
+        else if (article.StatusCode === 404) {
+          alert('no search result');
+          return false;
+        }
+        else {
+          alert('system error');
+          return false;
+        }
+      }),
+      catchError(this.handleError<Response<number[]>>('searchArticle'))
+    );
+  }
 
-      catchError(this.handleError<Response<Article[]>>('searchArticle'))
+  public searchArticle(term: string): Observable<Response<Articles[]>> {
+    return this.http.get<Response<Articles[]>>(`${this.articlesUrl}/search/${term}`).pipe(
+      tap(x => x.Data.length ? console.log(`found articles matching "${term}"`) : console.log(`no articles matching "${term}"`)),
+      filter(article => {
+        if (article.StatusCode === 200) {
+          return true;
+        }
+        else {
+          alert('system error');
+          return false;
+        }
+      }),
+      catchError(this.handleError<Response<Articles[]>>('searchArticle'))
     );
   }
 
   public userLogin(name: string, password: string): Observable<Response<string>> {
-    return this.http.put<Response<string>>(`${this.articlesUrl}/login`, { UserName: name, Password: password }).pipe(
+    return this.http.post<Response<string>>(`${this.articlesUrl}/login`, { UserName: name, Password: password }).pipe(
       tap(_ => console.log('fetch user')),
       filter(article => {
         if (article.StatusCode === 200) {
-          this.httpOptions.headers = this.httpOptions.headers.set('Authorization', article.Data);
+          this.setAuthorization(article.Data);
           this.login(this.jwt.decodeToken(article.Data));
           localStorage.setItem('TOKEN', article.Data);
           return true;
         }
+        else if (article.StatusCode === 400) {
+          alert('input value can\'t be null');
+          return false;
+        }
         else if (article.StatusCode === 404) {
-          console.log(article);
-          console.log(article.Message);
-          alert(article.Message);
+          alert('incorrect username or password');
           return false;
         }
         else {
-          console.log(article.Message);
-          console.log(article);
           alert('system error');
           return false;
         }
@@ -253,14 +374,15 @@ export class ArticleService {
         if (article.StatusCode === 200) {
           return true;
         }
+        else if (article.StatusCode === 400) {
+          alert('input value can\'t be null');
+          return false;
+        }
         else if (article.StatusCode === 404) {
-          console.log(article);
-          console.log(article.Message);
-          alert(article.Message);
+          alert('existed username');
           return false;
         }
         else {
-          console.log(article.Message);
           alert('system error');
           return false;
         }

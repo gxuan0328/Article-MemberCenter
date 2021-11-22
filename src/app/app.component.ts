@@ -8,22 +8,27 @@ import { ArticleService } from './article.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'Article-List';
+  private _title: string = 'Article-List';
+
+  public get title(): string {
+    return this._title;
+  }
+
+  private set title(title: string) {
+    this._title = title;
+  }
+
   constructor(
     private articleService: ArticleService,
     private jwt: JwtHelperService,
   ) { }
 
   public ngOnInit() {
-    let token = localStorage.getItem('TOKEN')?.toString();
+    const token = localStorage.getItem('TOKEN')?.toString()!;
     if (Boolean(token) && !this.jwt.isTokenExpired(token)) {
-      console.log(this.jwt.isTokenExpired(token));
-      console.log(Boolean(token));
       this.articleService.login(this.jwt.decodeToken(token));
+      this.articleService.setAuthorization(token);
     }
-    console.log('is token exist? ', Boolean(token) ? 'yes' : 'no');
-    console.log('is token expired? ', this.jwt.isTokenExpired(token) ? 'yes' : 'no');
-
   }
 
 }

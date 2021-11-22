@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
-import { Article } from '../article';
+import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ArticleService } from '../article.service';
+import { Articles } from '../interface/articles';
 @Component({
   selector: 'app-article-search',
   templateUrl: './article-search.component.html',
@@ -10,14 +10,23 @@ import { ArticleService } from '../article.service';
 })
 export class ArticleSearchComponent implements OnInit {
 
-  private _articles$!: Observable<Article[]>;
+  private _articles$!: Observable<Articles[]>;
   private searchTerm = new Subject<string>();
+  private _searchValue: string = '';
 
-  public get articles$(): Observable<Article[]> {
+  public get searchValue(): string {
+    return this._searchValue;
+  }
+
+  public set searchValue(searchValue: string) {
+    this._searchValue = searchValue;
+  }
+
+  public get articles$(): Observable<Articles[]> {
     return this._articles$;
   }
 
-  private set articles$(article: Observable<Article[]>) {
+  private set articles$(article: Observable<Articles[]>) {
     this._articles$ = article;
   }
 
@@ -33,13 +42,19 @@ export class ArticleSearchComponent implements OnInit {
     );
   }
 
-  public search(term: string): void {
-    if (!term.trim()) {
+  public search(): void {
+    const term: string = this.searchValue.trim();
+    if (!term) {
       console.log('no string');
     }
     else {
       this.searchTerm.next(term);
     }
+  }
 
+  public reset(): void {
+    setTimeout(() => {
+      this.searchValue = '';
+    }, 1000);
   }
 }

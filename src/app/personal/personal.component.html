@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="box">
+        <h2>我的文章</h2>
+    </div>
+    <div class="tab-list">
+        <ul>
+            <li *ngFor="let article of articles">
+
+                <mat-card>
+                    <a routerLink="/detail/{{article.Id}}">
+                        <mat-card-title-group>
+                            <mat-card-title>{{article.Title}}</mat-card-title>
+                            <mat-card-subtitle>{{article.CreateDatetime | date: 'medium' }}</mat-card-subtitle>
+                        </mat-card-title-group>
+                    </a>
+
+                    <mat-divider></mat-divider>
+                    <mat-card-actions>
+                        <button  mat-raised-button matTooltip="刪除" color="warn" (click)="delete(article.Id)">
+                            刪除
+                        </button>
+                        <button mat-raised-button matTooltip="編輯" color="primary" routerLink="/detail/{{article.Id}}/edit">
+                            編輯
+                        </button>
+                    </mat-card-actions>
+                </mat-card>
+
+
+            </li>
+        </ul>
+        <div class="pagination">
+            <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                (page)="getData($event)"></mat-paginator>
+        </div>
+    </div>
+</div>

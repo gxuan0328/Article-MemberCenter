@@ -1,36 +1,30 @@
 .container {
-    width: 400px;
-    height: 270px;
-    padding-top: 100px;
-    margin: 0 auto;
-    border-width: 5px;
-    /* background:red; */
-    text-align: center;
-    }
-  .loginbox{
-    background: #f3f3f3;
-    border-radius: 8px;
-    padding: 20px 0 40px 0;
-  }
-  mat-form-field{
-    width: 250px;
-  }
-  button {
-    margin: 0px 10px;
-  }
-  /* button {
-    background-color: #b6b6b6;
-    color: black;
-    border-radius: 4px;
-    border-style: hidden;
-    width: 60px;
-    height:25px;
-  }
-  button:hover {
-    background-color: #D0D0D0;
-  }
-  button:active {
-    background-color: #525252;
-    color: #fafafa;
-  } */
-    
+  width: 400px;
+  height: 300px;
+  margin: 0 auto;
+}
+a {
+  font-weight: bolder;
+  font-size: 28px;
+}
+mat-card {
+  background: #f3f3f3;
+  margin-top: 70px;
+  padding: 50px;
+  text-align: center;
+}
+mat-card-header {
+  display: block;
+  margin-bottom: 20px;
+}
+mat-card-title {
+  font-weight: bolder;
+}
+mat-card-content {
+  margin-bottom: 0px;
+}
+mat-form-field {
+  width: 250px;
+  margin-bottom: 5px;
+}
+
