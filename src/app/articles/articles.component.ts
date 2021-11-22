@@ -1,8 +1,6 @@
-import { noUndefined } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
-import { Observable } from 'rxjs';
 import { ArticleService } from '../article.service';
 import { Articles } from '../interface/articles';
 import { Response } from '../interface/response';
@@ -16,6 +14,8 @@ import { Search } from '../interface/search';
   styleUrls: ['./articles.component.css']
 })
 export class ArticlesComponent implements OnInit {
+
+  keyword = ['新聞標題', '作者名稱', '查詢日期'];
 
   private _panelOpenState: boolean = false;
 

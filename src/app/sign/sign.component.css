@@ -1,7 +1,5 @@
-.container {
-  width: 400px;
-  height: 300px;
-  margin: 0 auto;
+.container-fluid {
+  height: calc(100vh - 128px);
 }
 a {
   font-weight: bolder;
@@ -9,8 +7,8 @@ a {
 }
 mat-card {
   background: #f3f3f3;
-  margin-top: 70px;
-  padding: 50px;
+  width: 400px;
+  padding: 25px 0px;
   text-align: center;
 }
 mat-card-header {

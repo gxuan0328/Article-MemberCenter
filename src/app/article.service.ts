@@ -122,6 +122,24 @@ export class ArticleService {
           if (article.StatusCode === 200) {
             return true;
           }
+          else if (article.StatusCode === 401) {
+            alert('token varify failed, please login again');
+            this.logout();
+            this.router.navigate(['login']);
+            return false;
+          }
+          else if (article.StatusCode === 403) {
+            alert('don\'t have authority');
+            this.logout();
+            this.router.navigate(['login']);
+            return false;
+          }
+          else if (article.StatusCode === 412) {
+            alert('don\'t have token');
+            this.logout();
+            this.router.navigate(['login']);
+            return false;
+          }
           else {
             alert('system error');
             return false;

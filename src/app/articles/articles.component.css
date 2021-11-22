@@ -1,78 +1,85 @@
-
-h1 {
-    text-align: center;
-    margin: 0;
-    padding: 40px 0 20px 0;
-    font-size: 50px;
-}
-.container {
-    width: 64%;
-    margin:20px auto;
+.container-fluid {
+  min-height: calc(100% - 128px);
+  max-width: 800px;
+  min-width: 500px;
+  margin-top: 15px;
 }
 ul {
-    list-style-type: none;
-    padding: 0px;
-    margin: 0 auto;
+  list-style-type: none;
+  padding: 0px;
 }
 li {
-    text-align: left;
-    cursor: pointer;
+  text-align: left;
+  cursor: pointer;
 }
 a {
-    text-decoration:none;
+  text-decoration: none;
 }
 h2 {
-    display: inline-block;
+  font-weight: bolder;
+  margin: 0px;
+  display: inline-block;
+  align-self: center;
 }
 .box {
-    height: 65px;
-    width: 100%;
-    display: flex;
-    /* justify-content: space-between; */
+  height: 65px;
+  width: 100%;
+  display: flex;
 }
 .example-spacer {
-    flex: 1 1 auto;
-  }
+  flex: 1 1 auto;
+}
 .pagination {
-    text-align: center;
-    padding: 1px;
+  justify-content: flex-end;
+  padding: 1px;
 }
 app-article-search {
-    display: inline-block;
-    z-index: 1000;
+  display: inline-block;
 }
 ::ng-deep .ngx-pagination {
-    padding-left: 0px !important;
-  }
+  padding-left: 0px !important;
+}
 mat-card {
-    background-color: #f0f0f052;
-    margin: 10px 0;
-    border-radius: 10px;
+  background-color: #f0f0f052;
+  margin: 10px 0;
+  border-radius: 10px;
 }
 mat-card:hover {
-    background-color: #e9e9e98e;
-    
+  background-color: #e9e9e98e;
 }
 mat-card:active {
-    background: #3f51b526;
-    color: #3f51b5;
+  background: #3f51b526;
+  color: #3f51b5;
 }
 mat-card-title {
-    font-size: larger;
+  padding-top: 10px;
+  font-size: 20px;
+  margin-bottom: 0px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 mat-card-subtitle {
-text-align: right;
+  text-align: right;
+}
+mat-expansion-panel-header {
+  cursor: default;
 }
 mat-panel-title {
-    font-weight: bolder;
+  color: black !important;
+  font-weight: bolder;
+  align-items: center;
 }
 mat-expansion-panel {
-    margin: 20px;
+  margin: 20px;
 }
 mat-panel-description {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 .more {
-    top: 15px;
+  top: 15px;
+}
+mat-form-field {
+  width: 32%;
 }

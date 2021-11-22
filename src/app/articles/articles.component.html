@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid">
     <div class="box">
         <h2>最新消息</h2>
         <span class="example-spacer"></span>
@@ -10,11 +10,14 @@
             </ng-template>
         </button>
     </div>
-    <mat-expansion-panel *ngIf="panelOpenState" [expanded]="true" hideToggle>
+    <mat-expansion-panel *ngIf="panelOpenState" [expanded]="true" disabled hideToggle>
         <mat-expansion-panel-header>
             <mat-panel-title>
                 進階搜尋
             </mat-panel-title>
+            <!-- <mat-chip-list >
+                <mat-chip *ngFor="let key of keyword">{{key}}</mat-chip>
+            </mat-chip-list> -->
         </mat-expansion-panel-header>
         <form [formGroup]="form">
             <mat-panel-description>
@@ -39,7 +42,6 @@
                 </mat-form-field>
             </mat-panel-description>
         </form>
-
         <mat-action-row>
             <button mat-button color="primary" (click)="search()">搜尋</button>
         </mat-action-row>
@@ -47,10 +49,10 @@
     <div class="tab-list">
         <ul>
             <li *ngFor="let article of articles">
-                <a routerLink="/detail/{{article.Id}}">
+                <a routerLink="/detail/{{article.Id}}" title={{article.Title}}>
                     <mat-card>
                         <mat-card-title>{{article.Title}}</mat-card-title>
-                        <mat-card-subtitle>{{article.CreateDatetime | date: 'medium' }}</mat-card-subtitle>
+                        <mat-card-subtitle>{{article.UserName}} · {{article.CreateDatetime | date: 'medium' }}</mat-card-subtitle>
                     </mat-card>
                 </a>
 

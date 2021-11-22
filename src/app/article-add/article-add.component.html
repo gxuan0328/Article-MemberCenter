@@ -1,27 +1,4 @@
-<!-- <form [formGroup]="form">
-    <div class="header">
-        <h1>[ CREATE MODE ]</h1>
-    </div>
-    <div class="detail">
-        <textarea formControlName="Title" class="title" type="text" placeholder="Article Title"
-            [class.invalid]="Title.touched&&Title.invalid"></textarea>
-        <input formControlName="Author" class="author" type="text">
-    </div>
-    <div class="content">
-        <textarea formControlName="Content" class="textbox" placeholder="Content..."
-            [class.invalid]="Content.touched&&Content.invalid"></textarea>
-    </div>
-    <div class="footer">
-        <button mat-raised-button matTooltip="返回" color="primary" (click)="goBack()">
-            <mat-icon>reply</mat-icon>
-        </button>
-        <button mat-raised-button matTooltip="提交" color="primary" [disabled]="form.invalid" (click)="add()">
-            <mat-icon>done</mat-icon>
-        </button>
-    </div>
-</form> -->
-
-<div class="container">
+<div class="container-fluid">
     <mat-card>
         <form [formGroup]="form">
             <mat-card-title-group>

@@ -6,14 +6,15 @@ button {
   width: 100%;
   text-align: right;
 }
-.container {
-  width: 700px;
-  margin: 0 auto;
-
+.container-fluid {
+min-height: calc(100% - 128px);
+width: 800px;
+margin-top: 20px;
+margin-bottom:  20px;
 }
 mat-card {
   padding: 20px 25px;
-  margin:20px 0;
+  width: 700px;
 }
 mat-card-title-group {
   display: block;
@@ -24,9 +25,6 @@ mat-card-title {
 mat-form-field {
     width: 100%;
 }
-/* :host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-infix {
-    padding: 8px 0 1em 0 !important;
-} */
 :host ::ng-deep .no-wrapper .mat-form-field-wrapper{
    padding: 0px !important;
 }
@@ -36,7 +34,7 @@ mat-form-field {
     height:28px;
     padding: 5px;
     overflow:auto;
-    resize: auto;
+    resize: vertical;
     font-weight: bolder;
     font-size: 30px;
 }
@@ -55,19 +53,7 @@ mat-card-content {
     height: 220px;
     padding: 5px;
     overflow:auto;
-    resize: auto;
-    white-space: pre-wrap;
-    line-height: 30px;
-    letter-spacing: 3px;
-    font-size: 18px;
-}
-mat-card-content>textarea {
-    border-style: none;
-    width: 100%;
-    height:220px;
-    padding: 5px;
-    overflow:auto;
-    resize: auto;
+    resize: vertical;
     white-space: pre-wrap;
     line-height: 30px;
     letter-spacing: 3px;

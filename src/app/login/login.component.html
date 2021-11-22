@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid d-flex align-items-center justify-content-center">
   <mat-card>
     <mat-card-header>
       <mat-card-title><a>LOGIN</a></mat-card-title>
@@ -6,11 +6,11 @@
     <mat-card-content>
       <form [formGroup]="form">
         <mat-form-field appearance="fill">
-          <mat-label>UserName</mat-label>
+          <mat-label><mat-icon>person</mat-icon> UserName</mat-label>
           <input matInput formControlName="UserName">
         </mat-form-field>
         <mat-form-field appearance="fill">
-          <mat-label>Password</mat-label>
+          <mat-label><mat-icon>lock</mat-icon> Password</mat-label>
           <input matInput formControlName="Password" type="password"> 
         </mat-form-field>
       </form>

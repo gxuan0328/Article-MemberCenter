@@ -35,6 +35,7 @@ import { AddExitGuard, EditExitGuard } from './guard/confirm.guard';
 import { PersonalComponent } from './personal/personal.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatChipsModule } from '@angular/material/chips';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -82,7 +83,7 @@ export function tokenGetter() {
     MatPaginatorModule,
     MatDatepickerModule, 
     MatNativeDateModule, 
-
+    MatChipsModule,
   ],
   providers: [
     PermissionGuard,
