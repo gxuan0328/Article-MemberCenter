@@ -1,17 +1,15 @@
-<div>
-    <mat-form-field appearance="outline">
-        <mat-label>
-            <mat-icon>search</mat-icon>新聞標題搜尋
-        </mat-label>
-        <input matInput [(ngModel)]="searchValue" (change)="search()" (blur)="reset()">
-    </mat-form-field>
-    <ul *ngIf="searchValue" class="search-result">
-        <li *ngFor="let article of articles$ | async">
-            <a routerLink="/detail/{{article.Id}}">
-                <mat-card>
-                    <mat-card-subtitle>{{article.Title}}</mat-card-subtitle>
-                </mat-card>
-            </a>
-        </li>
-    </ul>
-</div>
+<mat-form-field appearance="outline">
+    <mat-label>
+        <mat-icon>search</mat-icon>新聞標題搜尋
+    </mat-label>
+    <input matInput [(ngModel)]="searchValue" (change)="search()" (blur)="reset()">
+</mat-form-field>
+<ul *ngIf="searchValue" class="search-result">
+    <li *ngFor="let article of articles$ | async">
+        <a routerLink="/detail/{{article.Id}}">
+            <mat-card>
+                <mat-card-subtitle>{{article.Title}}</mat-card-subtitle>
+            </mat-card>
+        </a>
+    </li>
+</ul>

@@ -1,6 +1,6 @@
 export interface Articles {
     Id: number;
     Title: string;
-    UserName: string;
+    Name: string;
     CreateDatetime: string;
 }

@@ -1,7 +1,7 @@
 export interface User {
     Id: number;
-    UserName: string;
-    UserStatus: number;
+    Name: string;
+    Status: number;
     exp: number;
     iat: number;
 }

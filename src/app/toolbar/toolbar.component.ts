@@ -13,8 +13,8 @@ export class ToolbarComponent implements OnInit {
 
   private _status: User = {
     Id: 0,
-    UserName: '',
-    UserStatus: 0,
+    Name: '',
+    Status: 0,
     exp: 0,
     iat: 0
   };
@@ -31,7 +31,7 @@ export class ToolbarComponent implements OnInit {
     private articleService: ArticleService,
     private router: Router,
     private snackBar: MatSnackBar,
-    ) { }
+  ) { }
 
   public ngOnInit(): void {
     this.getUserStatus();

@@ -23,8 +23,8 @@ export class AppComponent implements OnInit {
 
   private _status: User = {
     Id: 0,
-    UserName: '',
-    UserStatus: 0,
+    Name: '',
+    Status: 0,
     exp: 0,
     iat: 0
   };
@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
 
   public ngOnInit() {
     const token = localStorage.getItem('TOKEN')?.toString()!;
-    if (Boolean(token) && !this.jwt.isTokenExpired(token)) {
+    if ((Boolean(token)) && (!this.jwt.isTokenExpired(token))) {
       this.articleService.login(this.jwt.decodeToken(token));
       this.articleService.setAuthorization(token);
     }

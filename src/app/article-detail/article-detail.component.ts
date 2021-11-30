@@ -15,8 +15,8 @@ export class ArticleDetailComponent implements OnInit {
 
   private _status: User = {
     Id: 0,
-    UserName: '',
-    UserStatus: 0,
+    Name: '',
+    Status: 0,
     exp: 0,
     iat: 0
   };
@@ -43,7 +43,7 @@ export class ArticleDetailComponent implements OnInit {
     Id: 0,
     Title: '',
     User_Id: 0,
-    UserName: '',
+    Name: '',
     Content: '',
     CreateDatetime: '',
     UpdateDatetime: '',
@@ -91,7 +91,7 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   public delete(): void {
-    if (confirm('Are you sure to delete this record?')) {
+    if (confirm('是否確認刪除此篇文章?')) {
       const id = Number(this.route.snapshot.paramMap.get('id'));
       this.articleService.deleteArticle(id)
         .subscribe(() => {

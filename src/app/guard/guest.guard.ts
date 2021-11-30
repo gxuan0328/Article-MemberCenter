@@ -12,8 +12,8 @@ export class GuestGuard implements CanActivate {
 
   private _status: User = {
     Id: 0,
-    UserName: '',
-    UserStatus: 0,
+    Name: '',
+    Status: 0,
     exp: 0,
     iat: 0
   };
@@ -38,7 +38,7 @@ export class GuestGuard implements CanActivate {
       .subscribe((status) => {
         this.status = status;
       });
-    if (this.status.UserStatus === 0) {
+    if (this.status.Status === 0) {
       return true;
     }
     else {

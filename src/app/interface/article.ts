@@ -2,7 +2,7 @@ export interface Article {
     Id: number;
     Title: string;
     User_Id: number
-    UserName: string;
+    Name: string;
     Content: string;
     CreateDatetime: string;
     UpdateDatetime: string;

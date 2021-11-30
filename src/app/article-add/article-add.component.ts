@@ -26,8 +26,8 @@ export class ArticleAddComponent implements OnInit {
 
   private _status: User = {
     Id: 0,
-    UserName: '',
-    UserStatus: 0,
+    Name: '',
+    Status: 0,
     exp: 0,
     iat: 0
   };
@@ -41,8 +41,8 @@ export class ArticleAddComponent implements OnInit {
   }
 
   private _form: FormGroup = new FormGroup({
-    Title: new FormControl(null, [Validators.required, Validators.minLength(3)]),
-    Author: new FormControl({ value: this.status.UserName, disabled: true }, [Validators.required, Validators.minLength(3)]),
+    Title: new FormControl(null, [Validators.required]),
+    Author: new FormControl({ value: this.status.Name, disabled: true }, [Validators.required, Validators.minLength(3)]),
     Content: new FormControl(null, [Validators.required, Validators.minLength(20)]),
   });
 
@@ -83,12 +83,12 @@ export class ArticleAddComponent implements OnInit {
 
   public add(): void {
     this.submit = true;
-    
-    const newArticle: newArticle =  {
+
+    const newArticle: newArticle = {
       Title: this.form.get('Title')?.value.trim(),
       User_Id: this.status.Id,
       Content: this.replaceAll(this.form.get('Content')?.value.trim(), '\'', '\'\'')
-    };  
+    };
 
     this.articleService.addArticle(newArticle)
       .subscribe(() => {
@@ -101,7 +101,7 @@ export class ArticleAddComponent implements OnInit {
     this.articleService.getUserStatus()
       .subscribe(status => {
         this.status = status;
-        this.form.setValue({ Title: null, Author: this.status.UserName, Content: null });
+        this.form.setValue({ Title: null, Author: this.status.Name, Content: null });
       });
   }
 }

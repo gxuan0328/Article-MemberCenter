@@ -2,7 +2,7 @@
     <div class="box">
         <h2>我的文章</h2>
     </div>
-    <div class="tab-list">
+    <div *ngIf="articles else NULL" class="tab-list">
         <ul>
             <li *ngFor="let article of articles">
 
@@ -16,10 +16,11 @@
 
                     <mat-divider></mat-divider>
                     <mat-card-actions>
-                        <button  mat-raised-button matTooltip="刪除" color="warn" (click)="delete(article.Id)">
+                        <button mat-raised-button matTooltip="刪除" color="warn" (click)="delete(article.Id)">
                             刪除
                         </button>
-                        <button mat-raised-button matTooltip="編輯" color="primary" routerLink="/detail/{{article.Id}}/edit">
+                        <button mat-raised-button matTooltip="編輯" color="primary"
+                            routerLink="/detail/{{article.Id}}/edit">
                             編輯
                         </button>
                     </mat-card-actions>
@@ -31,4 +32,9 @@
                 (page)="getData($event)"></mat-paginator>
         </div>
     </div>
+    <ng-template #NULL>
+        <div style="height: auto; width: auto;">
+            <p>尚未發表文章，快去發布你的第一篇貼文吧</p>
+        </div>
+    </ng-template>
 </div>

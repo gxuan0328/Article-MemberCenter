@@ -11,6 +11,7 @@ import { Articles } from '../interface/articles';
 export class ArticleSearchComponent implements OnInit {
 
   private _articles$!: Observable<Articles[]>;
+  
   private searchTerm = new Subject<string>();
   private _searchValue: string = '';
 
@@ -44,10 +45,7 @@ export class ArticleSearchComponent implements OnInit {
 
   public search(): void {
     const term: string = this.searchValue.trim();
-    if (!term) {
-      console.log('no string');
-    }
-    else {
+    if (term) {
       this.searchTerm.next(term);
     }
   }

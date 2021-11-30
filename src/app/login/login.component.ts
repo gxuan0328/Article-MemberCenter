@@ -15,8 +15,8 @@ export class LoginComponent implements OnInit {
 
     private _status: User = {
         Id: 0,
-        UserName: '',
-        UserStatus: 0,
+        Name: '',
+        Status: 0,
         exp: 0,
         iat: 0
       };

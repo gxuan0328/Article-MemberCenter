@@ -6,8 +6,8 @@
                     <mat-form-field class="no-wrapper" appearance="outline">
                         <mat-label>文章標題</mat-label>
                         <textarea matInput formControlName="Title" class="title" type="text"
-                            [class.invalid]="Title.touched&&Title.invalid"></textarea>
-                        <mat-error>at least 3 letter </mat-error>
+                            [class.invalid]="Title.touched && Title.invalid"></textarea>
+                        <mat-error>請輸入文章標題 </mat-error>
                     </mat-form-field>
                 </mat-card-title>
             </mat-card-title-group>
@@ -15,8 +15,8 @@
                 <mat-form-field class="no-wrapper" appearance="outline">
                     <mat-label>文章內容</mat-label>
                     <textarea matInput formControlName="Content" class="content" type="text"
-                        [class.invalid]="Content.touched&&Content.invalid"></textarea>
-                    <mat-error>at least 20 letter </mat-error>
+                        [class.invalid]="Content.touched && Content.invalid"></textarea>
+                    <mat-error>字數限制: 最少20字 </mat-error>
                 </mat-form-field>
             </mat-card-content>
             <mat-divider></mat-divider>

@@ -2,7 +2,7 @@
     <div class="box">
         <h2>最新消息</h2>
         <span class="example-spacer"></span>
-        <app-article-search></app-article-search>
+        <app-article-search *ngIf="!panelOpenState"></app-article-search>
         <button mat-icon-button matTooltip="進階搜尋" class="more" (click)="togglePanel()">
             <mat-icon *ngIf="!panelOpenState else open">expand_more</mat-icon>
             <ng-template #open>
@@ -15,9 +15,6 @@
             <mat-panel-title>
                 進階搜尋
             </mat-panel-title>
-            <!-- <mat-chip-list >
-                <mat-chip *ngFor="let key of keyword">{{key}}</mat-chip>
-            </mat-chip-list> -->
         </mat-expansion-panel-header>
         <form [formGroup]="form">
             <mat-panel-description>
@@ -46,21 +43,26 @@
             <button mat-button color="primary" (click)="search()">搜尋</button>
         </mat-action-row>
     </mat-expansion-panel>
-    <div class="tab-list">
+    <div *ngIf="articles.length !== 0 else NULL" class="tab-list">
         <ul>
             <li *ngFor="let article of articles">
                 <a routerLink="/detail/{{article.Id}}" title={{article.Title}}>
                     <mat-card>
                         <mat-card-title>{{article.Title}}</mat-card-title>
-                        <mat-card-subtitle>{{article.UserName}} · {{article.CreateDatetime | date: 'medium' }}</mat-card-subtitle>
+                        <mat-card-subtitle>{{article.Name}} · {{article.CreateDatetime | date: 'medium' }}
+                        </mat-card-subtitle>
                     </mat-card>
                 </a>
-
             </li>
         </ul>
         <div class="pagination">
-            <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+            <mat-paginator [pageIndex]="pageIndex" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
                 (page)="nextPage($event)"></mat-paginator>
         </div>
     </div>
+        <ng-template #NULL>
+            <div style="height: auto; width: auto;">
+                <p>尚未有任何文章</p>
+            </div>
+        </ng-template>
 </div>

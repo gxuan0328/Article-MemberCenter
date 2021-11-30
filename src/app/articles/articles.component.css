@@ -1,6 +1,6 @@
 .container-fluid {
   min-height: calc(100% - 128px);
-  max-width: 800px;
+  width: 800px;
   min-width: 500px;
   margin-top: 15px;
 }
@@ -40,6 +40,7 @@ app-article-search {
   padding-left: 0px !important;
 }
 mat-card {
+  height: 80px;
   background-color: #f0f0f052;
   margin: 10px 0;
   border-radius: 10px;
@@ -52,7 +53,7 @@ mat-card:active {
   color: #3f51b5;
 }
 mat-card-title {
-  padding-top: 10px;
+  padding-top: 8px;
   font-size: 20px;
   margin-bottom: 0px;
   overflow: hidden;
@@ -83,3 +84,4 @@ mat-panel-description {
 mat-form-field {
   width: 32%;
 }
+

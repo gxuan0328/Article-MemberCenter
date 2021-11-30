@@ -10,11 +10,13 @@ a {
 }
 
 ul.search-result {
+  width: 204px;
   text-align: center;
   position: relative;
   top: -22px;
   margin: 0;
   padding: 0;
+  z-index: 100;
 }
 mat-card {
   background-color: #d8d8d886;
@@ -22,16 +24,18 @@ mat-card {
   border-radius: 0px;
 }
 mat-card:hover {
-    background-color: #c9c9c98e;
-    
+  background-color: #c9c9c98e;
 }
 mat-card:active {
-    background: #3f51b526;
-    color: #3f51b5;
+  background: #3f51b526;
+  color: #3f51b5;
 }
 mat-card-subtitle {
   text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 button {
-  top:-7px;
+  top: -7px;
 }

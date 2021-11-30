@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ArticleService } from '../article.service';
 import { Article } from '../interface/article';
@@ -26,8 +26,8 @@ export class ArticleEditComponent implements OnInit {
 
   private _status: User = {
     Id: 0,
-    UserName: '',
-    UserStatus: 0,
+    Name: '',
+    Status: 0,
     exp: 0,
     iat: 0
   };
@@ -41,8 +41,8 @@ export class ArticleEditComponent implements OnInit {
   }
 
   private _form: FormGroup = new FormGroup({
-    Title: new FormControl(null, [Validators.required, Validators.minLength(3)]),
-    Author: new FormControl({ value: this.status.UserName, disabled: true }, [Validators.required, Validators.minLength(3)]),
+    Title: new FormControl(null, [Validators.required]),
+    Author: new FormControl({ value: this.status.Name, disabled: true }, [Validators.required, Validators.minLength(3)]),
     Content: new FormControl(null, [Validators.required, Validators.minLength(20)]),
   });
 
@@ -58,7 +58,7 @@ export class ArticleEditComponent implements OnInit {
     Id: 0,
     Title: '',
     User_Id: 0,
-    UserName: '',
+    Name: '',
     Content: '',
     CreateDatetime: '',
     UpdateDatetime: '',
@@ -84,7 +84,6 @@ export class ArticleEditComponent implements OnInit {
     private route: ActivatedRoute,
     private articleService: ArticleService,
     private location: Location,
-    private router: Router,
     private snackBar: MatSnackBar,
   ) { }
 
@@ -102,7 +101,7 @@ export class ArticleEditComponent implements OnInit {
     this.articleService.getArticle(id)
       .subscribe(article => {
         this.article = article.Data;
-        this.form.setValue({ Title: this.article.Title, Author: this.article.UserName, Content: this.article.Content });
+        this.form.setValue({ Title: this.article.Title, Author: this.article.Name, Content: this.article.Content });
       });
   }
 

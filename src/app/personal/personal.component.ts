@@ -15,8 +15,8 @@ export class PersonalComponent implements OnInit {
 
   private _status: User = {
     Id: 0,
-    UserName: '',
-    UserStatus: 0,
+    Name: '',
+    Status: 0,
     exp: 0,
     iat: 0
   };
@@ -28,7 +28,7 @@ export class PersonalComponent implements OnInit {
   private set status(status: User) {
     this._status = status;
   }
-  
+
   private _length = 0;
 
   public get length(): number {
@@ -69,7 +69,7 @@ export class PersonalComponent implements OnInit {
     this._articleId = articleId;
   }
 
-  private _articles: Articles[] = [];
+  private _articles!: Articles[];
 
 
   public get articles(): Articles[] {
@@ -85,7 +85,7 @@ export class PersonalComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
-    ) {
+  ) {
     this.pageSize = 5;
     this.pageSizeOptions = [5, 10, 15, 20, 25];
 
@@ -121,7 +121,7 @@ export class PersonalComponent implements OnInit {
       this.articleService.deleteArticle(id)
         .subscribe(() => {
           this.snackBar.open('刪除文章成功', 'OK', { horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000 });
-          this.ngOnInit();
+          window.location.reload();
         });
     }
   }

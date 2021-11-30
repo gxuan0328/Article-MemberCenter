@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, filter, map, tap } from 'rxjs/operators';
+import { catchError, filter   } from 'rxjs/operators';
 import { Article } from './interface/article';
 import { Response } from './interface/response';
 import { User } from './interface/user';
@@ -24,8 +24,8 @@ export class ArticleService {
 
   private _status: User = {
     Id: 0,
-    UserName: '',
-    UserStatus: 0,
+    Name: '',
+    Status: 0,
     exp: 0,
     iat: 0
   };
@@ -56,14 +56,13 @@ export class ArticleService {
 
   public login(user: User): void {
     this.userStatus.next(user);
-    console.log(user);
   }
 
   public logout(): void {
     const guest = {
       Id: 0,
-      UserName: '',
-      UserStatus: 0,
+      Name: '',
+      Status: 0,
       exp: 0,
       iat: 0
     };
@@ -79,34 +78,15 @@ export class ArticleService {
     this.httpOptions.headers = this.httpOptions.headers.set('Authorization', token);
   }
 
-
-  public getArticles(): Observable<Response<Articles[]>> {
-    return this.http.get<Response<Articles[]>>(this.articlesUrl)
-      .pipe(
-        tap(_ => console.log('fetch all article')),
-        filter(article => {
-          if (article.StatusCode === 200) {
-            return true;
-          }
-          else {
-            alert('system error');
-            return false;
-          }
-        }),
-        catchError(this.handleError<Response<Articles[]>>('getArticles', { StatusCode: 0, Message: 'failed update', Data: [] }))
-      );
-  }
-
   public getArticlesId(): Observable<Response<number[]>> {
     return this.http.get<Response<number[]>>(`${this.articlesUrl}/articleId`)
       .pipe(
-        tap(_ => console.log('fetch article id array')),
         filter(article => {
           if (article.StatusCode === 200) {
             return true;
           }
           else {
-            alert('system error');
+            alert('系統錯誤');
             return false;
           }
         }),
@@ -117,31 +97,30 @@ export class ArticleService {
   public getPersonalArticlesId(): Observable<Response<number[]>> {
     return this.http.get<Response<number[]>>(`${this.articlesUrl}/personalArticleId`, this.httpOptions)
       .pipe(
-        tap(_ => console.log('fetch personal article id array')),
         filter(article => {
           if (article.StatusCode === 200) {
             return true;
           }
           else if (article.StatusCode === 401) {
-            alert('token varify failed, please login again');
+            alert('無效的憑證，請重新登入');
             this.logout();
             this.router.navigate(['login']);
             return false;
           }
           else if (article.StatusCode === 403) {
-            alert('don\'t have authority');
+            alert('無操作權限');
             this.logout();
             this.router.navigate(['login']);
             return false;
           }
           else if (article.StatusCode === 412) {
-            alert('don\'t have token');
+            alert('憑證不存在');
             this.logout();
             this.router.navigate(['login']);
             return false;
           }
           else {
-            alert('system error');
+            alert('系統錯誤');
             return false;
           }
         }),
@@ -150,23 +129,21 @@ export class ArticleService {
   }
 
   public getArticleList(list: number[]): Observable<Response<Articles[]>> {
-    return this.http.get<Response<Articles[]>>(`${this.articlesUrl}/list`,{params:{list: list}})
+    return this.http.get<Response<Articles[]>>(`${this.articlesUrl}/list`, { params: { list: list } })
       .pipe(
-        tap(_ => console.log('fetch a part of articles')),
         filter(article => {
           if (article.StatusCode === 200) {
             return true;
           }
           else if (article.StatusCode === 400) {
-            alert('don\'t have request article list');
             return false;
           }
           else if (article.StatusCode === 404) {
-            alert('some request article was not found');
+            alert('部分文章已異動，請重新整理');
             return false;
           }
           else {
-            alert('system error');
+            alert('系統錯誤');
             return false;
           }
         }),
@@ -177,18 +154,17 @@ export class ArticleService {
   public getArticle(id: number): Observable<Response<Article>> {
     const url = `${this.articlesUrl}/detail/${id}`;
     return this.http.get<Response<Article>>(url).pipe(
-      tap(_ => console.log('fetch article')),
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
         }
         else if (article.StatusCode === 404) {
-          alert('non-exist article');
+          alert('文章不存在');
           this.router.navigate(['articles']);
           return false;
         }
         else {
-          alert('system error');
+          alert('系統錯誤');
           this.router.navigate(['articles']);
           return false;
         }
@@ -200,39 +176,38 @@ export class ArticleService {
   public updateArticle(article: Article, id: number): Observable<Response<Article>> {
     const url = `${this.articlesUrl}/detail/${id}`;
     return this.http.put<Response<Article>>(url, article, this.httpOptions).pipe(
-      tap(_ => console.log(`update article id=${article.Id}`)),
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
         }
         else if (article.StatusCode === 400) {
-          alert('update failed, input value can\'t be null');
+          alert('更新失敗，輸入欄位不可為空');
           return false;
         }
         else if (article.StatusCode === 401) {
-          alert('token varify failed, please login again');
+          alert('無效的憑證，請重新登入');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
         else if (article.StatusCode === 403) {
-          alert('don\'t have authority');
+          alert('無操作權限');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
         else if (article.StatusCode === 404) {
-          alert('update failed, cannot proccess the request');
+          alert('建立失敗，無法處理請求');
           return false;
         }
         else if (article.StatusCode === 412) {
-          alert('don\'t have token');
+          alert('憑證不存在');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
         else {
-          alert('system error');
+          alert('系統錯誤');
           return false;
         }
       }),
@@ -243,36 +218,35 @@ export class ArticleService {
   public deleteArticle(id: number): Observable<Response<Article>> {
     const url = `${this.articlesUrl}/${id}`;
     return this.http.delete<Response<Article>>(url, this.httpOptions).pipe(
-      tap(_ => console.log(`delete article id=${id}`)),
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
         }
         else if (article.StatusCode === 401) {
-          alert('token varify failed, please login again');
+          alert('無效的憑證，請重新登入');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
         else if (article.StatusCode === 403) {
-          alert('don\'t have authority');
+          alert('無操作權限');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
         else if (article.StatusCode === 404) {
-          alert('non-exist article');
+          alert('文章不存在');
           this.router.navigate(['articles']);
           return false;
         }
         else if (article.StatusCode === 412) {
-          alert('don\'t have token');
+          alert('憑證不存在');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
         else {
-          alert('system error');
+          alert('系統錯誤');
           return false;
         }
       }),
@@ -282,35 +256,34 @@ export class ArticleService {
 
   public addArticle(article: newArticle): Observable<Response<Article>> {
     return this.http.post<Response<Article>>(`${this.articlesUrl}/article`, article, this.httpOptions).pipe(
-      tap(_ => console.log('success add a new article')),
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
         }
         else if (article.StatusCode === 400) {
-          alert('create failed, input value can\'t be null');
+          alert('建立失敗，輸入欄位不可為空');
           return false;
         }
         else if (article.StatusCode === 401) {
-          alert('token varify failed, please login again');
+          alert('無效的憑證，請重新登入');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
         else if (article.StatusCode === 403) {
-          alert('don\'t have authority');
+          alert('無操作權限');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
         else if (article.StatusCode === 412) {
-          alert('don\'t have token');
+          alert('憑證不存在');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
         else {
-          alert('system error');
+          alert('系統錯誤');
           return false;
         }
       }),
@@ -319,22 +292,20 @@ export class ArticleService {
   }
 
   public advanceSearch(value: Search): Observable<Response<number[]>> {
-    return this.http.get<Response<number[]>>(`${this.articlesUrl}/search`, { params: { title: value.Title, author: value.Author, fromDate: value.FromDate, toDate: value.ToDate}}).pipe(
-      tap(x => x.Data.length ? console.log(`found articles matching`) : console.log(`no articles matching`)),
+    return this.http.get<Response<number[]>>(`${this.articlesUrl}/search`, { params: { title: value.Title, author: value.Author, fromDate: value.FromDate, toDate: value.ToDate } }).pipe(
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
         }
         else if (article.StatusCode === 400) {
-          alert('don\'t input any condition');
+          alert('請輸入查詢條件');
           return false;
         }
         else if (article.StatusCode === 404) {
-          alert('no search result');
-          return false;
+          return true;
         }
         else {
-          alert('system error');
+          alert('系統錯誤');
           return false;
         }
       }),
@@ -344,13 +315,12 @@ export class ArticleService {
 
   public searchArticle(term: string): Observable<Response<Articles[]>> {
     return this.http.get<Response<Articles[]>>(`${this.articlesUrl}/search/${term}`).pipe(
-      tap(x => x.Data.length ? console.log(`found articles matching "${term}"`) : console.log(`no articles matching "${term}"`)),
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
         }
         else {
-          alert('system error');
+          alert('系統錯誤');
           return false;
         }
       }),
@@ -360,7 +330,6 @@ export class ArticleService {
 
   public userLogin(name: string, password: string): Observable<Response<string>> {
     return this.http.post<Response<string>>(`${this.articlesUrl}/login`, { UserName: name, Password: password }).pipe(
-      tap(_ => console.log('fetch user')),
       filter(article => {
         if (article.StatusCode === 200) {
           this.setAuthorization(article.Data);
@@ -369,15 +338,15 @@ export class ArticleService {
           return true;
         }
         else if (article.StatusCode === 400) {
-          alert('input value can\'t be null');
+          alert('輸入欄位不可為空');
           return false;
         }
         else if (article.StatusCode === 404) {
-          alert('incorrect username or password');
+          alert('帳號或密碼錯誤');
           return false;
         }
         else {
-          alert('system error');
+          alert('系統錯誤');
           return false;
         }
       }),
@@ -387,21 +356,20 @@ export class ArticleService {
 
   public userSignUp(name: string, password: string): Observable<Response<User>> {
     return this.http.post<Response<User>>(`${this.articlesUrl}/sign`, { UserName: name, Password: password }).pipe(
-      tap(_ => console.log('create account')),
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
         }
         else if (article.StatusCode === 400) {
-          alert('input value can\'t be null');
+          alert('輸入欄位不可為空');
           return false;
         }
         else if (article.StatusCode === 404) {
-          alert('existed username');
+          alert('使用者名稱已存在');
           return false;
         }
         else {
-          alert('system error');
+          alert('系統錯誤');
           return false;
         }
       }),

@@ -15,7 +15,15 @@ import { Search } from '../interface/search';
 })
 export class ArticlesComponent implements OnInit {
 
-  keyword = ['新聞標題', '作者名稱', '查詢日期'];
+  private _keyword: string[] = ['新聞標題', '作者名稱', '查詢日期'];
+
+  public get keyword(): string[] {
+    return this._keyword;
+  }
+
+  private set keyword(keyword: string[]) {
+    this._keyword = keyword;
+  }
 
   private _panelOpenState: boolean = false;
 
@@ -31,7 +39,17 @@ export class ArticlesComponent implements OnInit {
     this.panelOpenState = !this.panelOpenState;
   }
 
-  private _length = 0;
+  private _pageIndex: number = 3;
+
+  public get pageIndex(): number {
+    return this._pageIndex;
+  }
+
+  private set pageIndex(pageIndex: number) {
+    this._pageIndex = pageIndex;
+  }
+
+  private _length: number = 0;
 
   public get length(): number {
     return this._length;
@@ -71,7 +89,7 @@ export class ArticlesComponent implements OnInit {
     this._articleId = articleId;
   }
 
-  private _articles: Articles[] = [];
+  private _articles!: Articles[];
 
 
   public get articles(): Articles[] {
@@ -104,6 +122,7 @@ export class ArticlesComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    console.log('init', this.articles===null);
     this.articleService.getArticlesId()
       .subscribe((id) => {
         this.getData(id);
@@ -111,6 +130,7 @@ export class ArticlesComponent implements OnInit {
   }
 
   public getData(id: Response<number[]>) {
+    this.articles = [];
     this.articleId = id.Data;
     this.length = id.Data.length;
     this.articleService.getArticleList(id.Data.slice(0, 5))
@@ -132,9 +152,10 @@ export class ArticlesComponent implements OnInit {
       ToDate: this.form.get('ToDate')?.value === null ? '' : new Date(this.form.get('ToDate')?.value).toISOString()
     };
 
-    if (searchValue.Title !== '' || searchValue.Author !== '' || searchValue.FromDate !== '' || searchValue.ToDate !== '') {
+    if ((searchValue.Title !== '') || (searchValue.Author !== '') || (searchValue.FromDate !== '') || (searchValue.ToDate !== '')) {
       this.articleService.advanceSearch(searchValue)
         .subscribe((id) => {
+          this.pageIndex = 0;
           this.getData(id);
         });
     }

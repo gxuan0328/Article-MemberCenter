@@ -57,7 +57,7 @@ mat-card-title-group {
   display: block;
 }
 mat-card-title {
-  padding-top: 10px;
+  padding-top: 8px;
   font-size: 20px;
   margin-bottom: 0px;
   overflow: hidden;
@@ -66,6 +66,7 @@ mat-card-title {
 }
 mat-card-subtitle {
   text-align: right;
+  margin-bottom: 5px;
 }
 mat-card-actions {
   text-align: right;
