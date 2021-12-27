@@ -46,10 +46,12 @@ export class ToolbarComponent implements OnInit {
 
   public logout(): void {
     if (confirm('確定要登出帳號嗎?')) {
-      this.articleService.logout();
-      this.getUserStatus();
-      this.snackBar.open('登出成功', 'OK', { horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000 });
-      this.router.navigate(['articles']);
+      this.articleService.userLogout().subscribe(
+        () => {
+          this.snackBar.open('登出成功', 'OK', { horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000 });
+          this.router.navigate(['articles']);
+        }
+      );
     }
   }
 }

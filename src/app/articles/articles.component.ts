@@ -2,11 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { ArticleService } from '../article.service';
-import { Articles } from '../interface/articles';
+import { Articles, Search } from '../interface/article';
 import { Response } from '../interface/response';
-import { Search } from '../interface/search';
 
-//todo
 
 @Component({
   selector: 'app-articles',
@@ -39,7 +37,7 @@ export class ArticlesComponent implements OnInit {
     this.panelOpenState = !this.panelOpenState;
   }
 
-  private _pageIndex: number = 3;
+  private _pageIndex: number = 0;
 
   public get pageIndex(): number {
     return this._pageIndex;
@@ -133,14 +131,14 @@ export class ArticlesComponent implements OnInit {
     this.articles = [];
     this.articleId = id.Data;
     this.length = id.Data.length;
-    this.articleService.getArticleList(id.Data.slice(0, 5))
+    this.articleService.getArticleList(id.Data.slice(0, 5).toString())
       .subscribe((articles) => this.articles = articles.Data);
   }
 
   public nextPage(event: PageEvent): void {
     let startingIndex = event.pageIndex * event.pageSize;
     let endingIndex = startingIndex + event.pageSize;
-    this.articleService.getArticleList(this.articleId.slice(startingIndex, endingIndex))
+    this.articleService.getArticleList(this.articleId.slice(startingIndex, endingIndex).toString())
       .subscribe((articles) => this.articles = articles.Data);
   }
 

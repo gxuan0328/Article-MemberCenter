@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { ArticleService } from '../article.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from '../interface/user';
-import { newArticle } from '../interface/newArticle';
+import { newArticle } from '../interface/article';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

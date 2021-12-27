@@ -43,7 +43,7 @@
             <button mat-button color="primary" (click)="search()">搜尋</button>
         </mat-action-row>
     </mat-expansion-panel>
-    <div *ngIf="articles.length !== 0 else NULL" class="tab-list">
+    <div *ngIf="articles.length !== 0 else NULL" class="tab-list col">
         <ul>
             <li *ngFor="let article of articles">
                 <a routerLink="/detail/{{article.Id}}" title={{article.Title}}>

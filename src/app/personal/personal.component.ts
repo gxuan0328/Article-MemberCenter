@@ -3,7 +3,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ArticleService } from '../article.service';
-import { Articles } from '../interface/articles';
+import { Articles } from '../interface/article';
 import { User } from '../interface/user';
 
 @Component({
@@ -97,7 +97,7 @@ export class PersonalComponent implements OnInit {
       .subscribe((id) => {
         this.articleId = id.Data;
         this.length = id.Data.length;
-        this.articleService.getArticleList(id.Data.slice(0, this.pageSize))
+        this.articleService.getArticleList(id.Data.slice(0, this.pageSize).toString())
           .subscribe((articles) => this.articles = articles.Data);
       });
   }
@@ -112,7 +112,7 @@ export class PersonalComponent implements OnInit {
   public getData(event: PageEvent): void {
     let startingIndex = event.pageIndex * event.pageSize;
     let endingIndex = startingIndex + event.pageSize;
-    this.articleService.getArticleList(this.articleId.slice(startingIndex, endingIndex))
+    this.articleService.getArticleList(this.articleId.slice(startingIndex, endingIndex).toString())
       .subscribe((articles) => this.articles = articles.Data);
   }
 

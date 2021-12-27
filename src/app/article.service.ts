@@ -2,21 +2,20 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, filter   } from 'rxjs/operators';
-import { Article } from './interface/article';
+import { Article, Articles, newArticle, Search } from './interface/article';
 import { Response } from './interface/response';
 import { User } from './interface/user';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
-import { Articles } from './interface/articles';
-import { newArticle } from './interface/newArticle';
-import { Search } from './interface/search';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArticleService {
 
-  private articlesUrl = 'api';
+  private articleUrl = 'api/article';
+  private userUrl = 'api/user';
 
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -75,11 +74,11 @@ export class ArticleService {
   }
 
   public setAuthorization(token: string): void {
-    this.httpOptions.headers = this.httpOptions.headers.set('Authorization', token);
+    this.httpOptions.headers = this.httpOptions.headers.set('Authorization', `Bearer ${token}`);
   }
 
   public getArticlesId(): Observable<Response<number[]>> {
-    return this.http.get<Response<number[]>>(`${this.articlesUrl}/articleId`)
+    return this.http.get<Response<number[]>>(`${this.articleUrl}/id`)
       .pipe(
         filter(article => {
           if (article.StatusCode === 200) {
@@ -95,7 +94,7 @@ export class ArticleService {
   }
 
   public getPersonalArticlesId(): Observable<Response<number[]>> {
-    return this.http.get<Response<number[]>>(`${this.articlesUrl}/personalArticleId`, this.httpOptions)
+    return this.http.get<Response<number[]>>(`${this.articleUrl}/id/personal`, this.httpOptions)
       .pipe(
         filter(article => {
           if (article.StatusCode === 200) {
@@ -128,8 +127,8 @@ export class ArticleService {
       );
   }
 
-  public getArticleList(list: number[]): Observable<Response<Articles[]>> {
-    return this.http.get<Response<Articles[]>>(`${this.articlesUrl}/list`, { params: { list: list } })
+  public getArticleList(list: string): Observable<Response<Articles[]>> {
+    return this.http.get<Response<Articles[]>>(`${this.articleUrl}/list`, { params: { list: list } })
       .pipe(
         filter(article => {
           if (article.StatusCode === 200) {
@@ -152,7 +151,7 @@ export class ArticleService {
   }
 
   public getArticle(id: number): Observable<Response<Article>> {
-    const url = `${this.articlesUrl}/detail/${id}`;
+    const url = `${this.articleUrl}/${id}`;
     return this.http.get<Response<Article>>(url).pipe(
       filter(article => {
         if (article.StatusCode === 200) {
@@ -174,7 +173,7 @@ export class ArticleService {
   }
 
   public updateArticle(article: Article, id: number): Observable<Response<Article>> {
-    const url = `${this.articlesUrl}/detail/${id}`;
+    const url = `${this.articleUrl}/${id}`;
     return this.http.put<Response<Article>>(url, article, this.httpOptions).pipe(
       filter(article => {
         if (article.StatusCode === 200) {
@@ -216,7 +215,7 @@ export class ArticleService {
   }
 
   public deleteArticle(id: number): Observable<Response<Article>> {
-    const url = `${this.articlesUrl}/${id}`;
+    const url = `${this.articleUrl}/${id}`;
     return this.http.delete<Response<Article>>(url, this.httpOptions).pipe(
       filter(article => {
         if (article.StatusCode === 200) {
@@ -255,7 +254,7 @@ export class ArticleService {
   }
 
   public addArticle(article: newArticle): Observable<Response<Article>> {
-    return this.http.post<Response<Article>>(`${this.articlesUrl}/article`, article, this.httpOptions).pipe(
+    return this.http.post<Response<Article>>(`${this.articleUrl}`, article, this.httpOptions).pipe(
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
@@ -292,7 +291,7 @@ export class ArticleService {
   }
 
   public advanceSearch(value: Search): Observable<Response<number[]>> {
-    return this.http.get<Response<number[]>>(`${this.articlesUrl}/search`, { params: { title: value.Title, author: value.Author, fromDate: value.FromDate, toDate: value.ToDate } }).pipe(
+    return this.http.get<Response<number[]>>(`${this.articleUrl}/search`, { params: { title: value.Title, author: value.Author, fromDate: value.FromDate, toDate: value.ToDate } }).pipe(
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
@@ -314,7 +313,7 @@ export class ArticleService {
   }
 
   public searchArticle(term: string): Observable<Response<Articles[]>> {
-    return this.http.get<Response<Articles[]>>(`${this.articlesUrl}/search/${term}`).pipe(
+    return this.http.get<Response<Articles[]>>(`${this.articleUrl}/search/${term}`).pipe(
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
@@ -329,7 +328,7 @@ export class ArticleService {
   }
 
   public userLogin(name: string, password: string): Observable<Response<string>> {
-    return this.http.post<Response<string>>(`${this.articlesUrl}/login`, { UserName: name, Password: password }).pipe(
+    return this.http.post<Response<string>>(`${this.userUrl}/login`, { UserName: name, Password: password }).pipe(
       filter(article => {
         if (article.StatusCode === 200) {
           this.setAuthorization(article.Data);
@@ -355,7 +354,7 @@ export class ArticleService {
   }
 
   public userSignUp(name: string, password: string): Observable<Response<User>> {
-    return this.http.post<Response<User>>(`${this.articlesUrl}/sign`, { UserName: name, Password: password }).pipe(
+    return this.http.post<Response<User>>(`${this.userUrl}/sign`, { UserName: name, Password: password }).pipe(
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
@@ -374,6 +373,35 @@ export class ArticleService {
         }
       }),
       catchError(this.handleError<Response<User>>(`userSignUp name=${name}`))
+    );
+  }
+
+  public userLogout(): Observable<Response<string>> {
+    return this.http.put<Response<string>>(`${this.userUrl}/logout`, null, this.httpOptions).pipe(
+      filter(article => {
+        if (article.StatusCode === 200) {
+          this.logout();
+          return true;
+        }
+        else if (article.StatusCode === 401) {
+          alert('無效的憑證，請重新登入');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else if (article.StatusCode === 403) {
+          alert('無操作權限');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else {
+          alert('系統錯誤');
+          this.logout();
+          return false;
+        }
+      }),
+      catchError(this.handleError<Response<string>>('userLogout'))
     );
   }
 

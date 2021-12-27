@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ArticleService } from '../article.service';
-import { Articles } from '../interface/articles';
+import { Articles } from '../interface/article';
 @Component({
   selector: 'app-article-search',
   templateUrl: './article-search.component.html',
