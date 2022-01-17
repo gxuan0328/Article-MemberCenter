@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+import { now } from 'moment';
 import { ArticleService } from '../article.service';
 import { Articles, Search } from '../interface/article';
 import { Response } from '../interface/response';
@@ -146,9 +147,10 @@ export class ArticlesComponent implements OnInit {
     const searchValue: Search = {
       Title: this.form.get('Title')?.value === null ? '' : this.form.get('Title')?.value,
       Author: this.form.get('Author')?.value === null ? '' : this.form.get('Author')?.value,
-      FromDate: this.form.get('FromDate')?.value === null ? '' : new Date(this.form.get('FromDate')?.value).toISOString(),
-      ToDate: this.form.get('ToDate')?.value === null ? '' : new Date(this.form.get('ToDate')?.value).toISOString()
+      FromDate: this.form.get('FromDate')?.value === null ? new Date(0).toISOString() : new Date(this.form.get('FromDate')?.value).toISOString(),
+      ToDate: this.form.get('ToDate')?.value === null ? new Date().toISOString() : new Date(this.form.get('ToDate')?.value).toISOString()
     };
+    console.log('time: ',new Date().toISOString());
 
     if ((searchValue.Title !== '') || (searchValue.Author !== '') || (searchValue.FromDate !== '') || (searchValue.ToDate !== '')) {
       this.articleService.advanceSearch(searchValue)

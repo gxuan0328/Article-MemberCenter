@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, filter   } from 'rxjs/operators';
+import { catchError, filter, map, switchMap   } from 'rxjs/operators';
 import { Article, Articles, newArticle, Search } from './interface/article';
 import { Response } from './interface/response';
 import { User } from './interface/user';
@@ -100,20 +100,26 @@ export class ArticleService {
           if (article.StatusCode === 200) {
             return true;
           }
-          else if (article.StatusCode === 401) {
+          else if (article.StatusCode === 1) {
             alert('無效的憑證，請重新登入');
             this.logout();
             this.router.navigate(['login']);
             return false;
           }
-          else if (article.StatusCode === 403) {
-            alert('無操作權限');
+          else if (article.StatusCode === 2) {
+            alert('憑證已過期，請重新登入');
             this.logout();
             this.router.navigate(['login']);
             return false;
           }
-          else if (article.StatusCode === 412) {
-            alert('憑證不存在');
+          else if (article.StatusCode === 3) {
+            alert('憑證不存在，請重新登入');
+            this.logout();
+            this.router.navigate(['login']);
+            return false;
+          }
+          else if (article.StatusCode === 4) {
+            alert('帳號正在其他裝置使用，請重新登入');
             this.logout();
             this.router.navigate(['login']);
             return false;
@@ -183,24 +189,30 @@ export class ArticleService {
           alert('更新失敗，輸入欄位不可為空');
           return false;
         }
-        else if (article.StatusCode === 401) {
+        else if (article.StatusCode === 404) {
+          alert('更新失敗，無法處理請求');
+          return false;
+        }
+        else if (article.StatusCode === 1) {
           alert('無效的憑證，請重新登入');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
-        else if (article.StatusCode === 403) {
-          alert('無操作權限');
+        else if (article.StatusCode === 2) {
+          alert('憑證已過期，請重新登入');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
-        else if (article.StatusCode === 404) {
-          alert('建立失敗，無法處理請求');
+        else if (article.StatusCode === 3) {
+          alert('憑證不存在，請重新登入');
+          this.logout();
+          this.router.navigate(['login']);
           return false;
         }
-        else if (article.StatusCode === 412) {
-          alert('憑證不存在');
+        else if (article.StatusCode === 4) {
+          alert('帳號正在其他裝置使用，請重新登入');
           this.logout();
           this.router.navigate(['login']);
           return false;
@@ -221,25 +233,31 @@ export class ArticleService {
         if (article.StatusCode === 200) {
           return true;
         }
-        else if (article.StatusCode === 401) {
-          alert('無效的憑證，請重新登入');
-          this.logout();
-          this.router.navigate(['login']);
-          return false;
-        }
-        else if (article.StatusCode === 403) {
-          alert('無操作權限');
-          this.logout();
-          this.router.navigate(['login']);
-          return false;
-        }
         else if (article.StatusCode === 404) {
           alert('文章不存在');
           this.router.navigate(['articles']);
           return false;
         }
-        else if (article.StatusCode === 412) {
-          alert('憑證不存在');
+        else if (article.StatusCode === 1) {
+          alert('無效的憑證，請重新登入');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else if (article.StatusCode === 2) {
+          alert('憑證已過期，請重新登入');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else if (article.StatusCode === 3) {
+          alert('憑證不存在，請重新登入');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else if (article.StatusCode === 4) {
+          alert('帳號正在其他裝置使用，請重新登入');
           this.logout();
           this.router.navigate(['login']);
           return false;
@@ -263,20 +281,26 @@ export class ArticleService {
           alert('建立失敗，輸入欄位不可為空');
           return false;
         }
-        else if (article.StatusCode === 401) {
+        else if (article.StatusCode === 1) {
           alert('無效的憑證，請重新登入');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
-        else if (article.StatusCode === 403) {
-          alert('無操作權限');
+        else if (article.StatusCode === 2) {
+          alert('憑證已過期，請重新登入');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
-        else if (article.StatusCode === 412) {
-          alert('憑證不存在');
+        else if (article.StatusCode === 3) {
+          alert('憑證不存在，請重新登入');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else if (article.StatusCode === 4) {
+          alert('帳號正在其他裝置使用，請重新登入');
           this.logout();
           this.router.navigate(['login']);
           return false;
@@ -291,7 +315,7 @@ export class ArticleService {
   }
 
   public advanceSearch(value: Search): Observable<Response<number[]>> {
-    return this.http.get<Response<number[]>>(`${this.articleUrl}/search`, { params: { title: value.Title, author: value.Author, fromDate: value.FromDate, toDate: value.ToDate } }).pipe(
+    return this.http.get<Response<number[]>>(`${this.articleUrl}/search`, { params: { Title: value.Title, Author: value.Author, FromDate: value.FromDate, ToDate: value.ToDate } }).pipe(
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
@@ -312,17 +336,21 @@ export class ArticleService {
     );
   }
 
-  public searchArticle(term: string): Observable<Response<Articles[]>> {
-    return this.http.get<Response<Articles[]>>(`${this.articleUrl}/search/${term}`).pipe(
+  public searchArticle(value: Search): Observable<Response<Articles[]>> {
+    return this.http.get<Response<Articles[]>>(`${this.articleUrl}/search`, { params: { Title: value.Title, Author: value.Author, FromDate: value.FromDate, ToDate: value.ToDate } }).pipe(
       filter(article => {
         if (article.StatusCode === 200) {
           return true;
+        }
+        else if (article.StatusCode === 404) {
+          return false;
         }
         else {
           alert('系統錯誤');
           return false;
         }
       }),
+      switchMap(val => this.getArticleList(val.Data.toString())),
       catchError(this.handleError<Response<Articles[]>>('searchArticle'))
     );
   }
@@ -340,7 +368,7 @@ export class ArticleService {
           alert('輸入欄位不可為空');
           return false;
         }
-        else if (article.StatusCode === 404) {
+        else if (article.StatusCode === 10) {
           alert('帳號或密碼錯誤');
           return false;
         }
@@ -363,7 +391,7 @@ export class ArticleService {
           alert('輸入欄位不可為空');
           return false;
         }
-        else if (article.StatusCode === 404) {
+        else if (article.StatusCode === 11) {
           alert('使用者名稱已存在');
           return false;
         }
@@ -383,14 +411,26 @@ export class ArticleService {
           this.logout();
           return true;
         }
-        else if (article.StatusCode === 401) {
+        else if (article.StatusCode === 1) {
           alert('無效的憑證，請重新登入');
           this.logout();
           this.router.navigate(['login']);
           return false;
         }
-        else if (article.StatusCode === 403) {
-          alert('無操作權限');
+        else if (article.StatusCode === 2) {
+          alert('憑證已過期，請重新登入');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else if (article.StatusCode === 3) {
+          alert('憑證不存在，請重新登入');
+          this.logout();
+          this.router.navigate(['login']);
+          return false;
+        }
+        else if (article.StatusCode === 4) {
+          alert('帳號正在其他裝置使用，請重新登入');
           this.logout();
           this.router.navigate(['login']);
           return false;

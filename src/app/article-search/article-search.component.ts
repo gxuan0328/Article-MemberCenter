@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, mapTo, switchMap, tap } from 'rxjs/operators';
 import { ArticleService } from '../article.service';
-import { Articles } from '../interface/article';
+import { Articles, Search } from '../interface/article';
 @Component({
   selector: 'app-article-search',
   templateUrl: './article-search.component.html',
@@ -11,9 +11,25 @@ import { Articles } from '../interface/article';
 export class ArticleSearchComponent implements OnInit {
 
   private _articles$!: Observable<Articles[]>;
-  
-  private searchTerm = new Subject<string>();
+
+  private searchTerm = new Subject<Search>();
+
   private _searchValue: string = '';
+
+  private _searchRequest: Search = {
+    Title: '',
+    Author: '',
+    FromDate: new Date(0).toISOString(),
+    ToDate: new Date().toISOString()
+  };
+
+  public get searchRequest(): Search {
+    return this._searchRequest;
+  }
+
+  public set searchRequest(searchRequest: Search) {
+    this._searchRequest = searchRequest;
+  }
 
   public get searchValue(): string {
     return this._searchValue;
@@ -36,17 +52,17 @@ export class ArticleSearchComponent implements OnInit {
   public ngOnInit(): void {
     this.articles$ = this.searchTerm.pipe(
       debounceTime(300),
-      distinctUntilChanged(),
-      switchMap((term: string) => this.articleService.searchArticle(term).pipe(
+      switchMap((searchRequest) => this.articleService.searchArticle(searchRequest).pipe(
         map(val => val.Data))
-      )
+      ),
     );
   }
 
   public search(): void {
     const term: string = this.searchValue.trim();
     if (term) {
-      this.searchTerm.next(term);
+      this.searchRequest.Title = term;
+      this.searchTerm.next(this.searchRequest);
     }
   }
 
